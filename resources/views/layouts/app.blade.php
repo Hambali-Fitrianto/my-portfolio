@@ -75,9 +75,9 @@
                     <i class="fas fa-user-circle w-5"></i>
                     <span class="text-sm font-semibold">Manajemen Profil</span>
                 </a>
-                <a href="#" class="nav-link flex items-center gap-3 px-4 py-3 opacity-50 cursor-not-allowed italic">
+                <a href="{{ route('experience.index') }}" class="nav-link flex items-center gap-3 px-4 py-3 {{ request()->routeIs('experience.*') ? 'active' : '' }}">
                     <i class="fas fa-briefcase w-5"></i>
-                    <span class="text-sm font-semibold text-xs">Soon: Experience</span>
+                    <span class="text-sm font-semibold">Experience</span>
                 </a>
                 <a href="#" class="nav-link flex items-center gap-3 px-4 py-3 opacity-50 cursor-not-allowed italic">
                     <i class="fas fa-project-diagram w-5"></i>
