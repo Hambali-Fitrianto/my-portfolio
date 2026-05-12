@@ -4,7 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ExperienceController; // Import Controller baru
+use App\Http\Controllers\ExperienceController;
+use App\Http\Controllers\EducationController;
 
 // 1. Tampilan Utama (Landing Page)
 Route::get('/', [LandingPageController::class, 'index'])->name('home');
@@ -40,5 +41,14 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
         Route::get('/experience/{experience}/edit', [ExperienceController::class, 'edit'])->name('edit');
         Route::put('/experience/{experience}', [ExperienceController::class, 'update'])->name('update');
         Route::delete('/experience/{experience}', [ExperienceController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::name('education.')->group(function () {
+        Route::get('/education', [EducationController::class, 'index'])->name('index');
+        Route::get('/education/create', [EducationController::class, 'create'])->name('create');
+        Route::post('/education', [EducationController::class, 'store'])->name('store');
+        Route::get('/education/{education}/edit', [EducationController::class, 'edit'])->name('edit');
+        Route::put('/education/{education}', [EducationController::class, 'update'])->name('update');
+        Route::delete('/education/{education}', [EducationController::class, 'destroy'])->name('destroy');
     });
 });
