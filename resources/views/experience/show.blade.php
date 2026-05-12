@@ -1,8 +1,8 @@
 @extends('layouts.app')
-@section('title', 'Detail Pengalaman')
+@section('title', 'Detail Riwayat Kerja')
 
 @section('content')
-<div class="max-w-6xl mx-auto">
+<div class="max-w-4xl mx-auto">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
         <div class="flex items-center gap-4">
             <a href="{{ route('experience.index') }}" class="p-2 bg-white/5 text-gray-400 rounded-lg hover:text-white transition">
@@ -10,7 +10,7 @@
             </a>
             <div>
                 <h1 class="text-3xl font-black text-white tracking-tight">Detail Pengalaman</h1>
-                <p class="text-gray-500 text-sm">Review data teknis dan dokumentasi sistem.</p>
+                <p class="text-gray-500 text-sm">Review riwayat karir profesional.</p>
             </div>
         </div>
         <div class="flex gap-3">
@@ -20,100 +20,58 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div class="lg:col-span-2 space-y-6">
-            <div class="card-admin p-8">
-                <div class="flex justify-between items-start mb-6">
-                    <div>
-                        <span class="text-blue-500 text-xs font-bold uppercase tracking-[0.2em] mb-2 block">Project / Work Experience</span>
-                        <h2 class="text-3xl font-bold text-white">{{ $experience->posisi }}</h2>
-                        <p class="text-xl text-gray-400 mt-1">{{ $experience->perusahaan }}</p>
-                    </div>
-                    <div class="text-right">
-                        <span class="px-4 py-2 bg-blue-600/10 border border-blue-600/20 rounded-full text-xs font-bold text-blue-400 uppercase tracking-widest">
-                            {{ $experience->periode }}
-                        </span>
+    <div class="card-admin p-10 border-t-4 border-t-blue-600 bg-gradient-to-b from-blue-600/5 to-transparent">
+        <div class="flex flex-col md:flex-row justify-between items-start gap-6 pb-10 border-b border-white/5">
+            <div>
+                <span class="text-blue-500 text-xs font-black uppercase tracking-[0.3em] mb-3 block">Professional Experience</span>
+                <h2 class="text-4xl font-black text-white leading-tight mb-2">{{ $experience->posisi }}</h2>
+                <div class="flex items-center gap-3 text-xl text-gray-400">
+                    <i class="fas fa-building text-blue-500/50 text-sm"></i>
+                    <span class="font-bold">{{ $experience->perusahaan }}</span>
+                </div>
+            </div>
+            <div class="md:text-right">
+                <div class="inline-block px-5 py-2 bg-white/5 border border-white/10 rounded-2xl">
+                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">Periode Kerja</p>
+                    <p class="text-sm font-bold text-white">{{ $experience->periode }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mt-10">
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-3">Lokasi / Alamat</h3>
+                    <div class="flex items-start gap-3 text-gray-300">
+                        <i class="fas fa-map-marker-alt text-blue-500 mt-1"></i>
+                        <span class="text-sm leading-relaxed">{{ $experience->alamat }}</span>
                     </div>
                 </div>
 
-                <div class="border-t border-white/5 pt-6">
-                    <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">Deskripsi Pekerjaan & Teknologi</h3>
-                    <div class="text-gray-300 leading-relaxed text-base space-y-4">
+                <div>
+                    <h3 class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-3">Metadata</h3>
+                    <div class="text-xs text-gray-500 space-y-2 italic">
+                        <p>Ditambahkan: {{ $experience->created_at->format('d M Y') }}</p>
+                        <p>Terakhir Update: {{ $experience->updated_at->diffForHumans() }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="md:col-span-2">
+                <h3 class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-4">Tugas & Kontribusi Teknis</h3>
+                <div class="text-gray-300 leading-relaxed text-base">
+                    <div class="bg-white/[0.02] border border-white/5 p-6 rounded-2xl">
                         {!! nl2br(e($experience->deskripsi)) !!}
                     </div>
                 </div>
             </div>
-
-            <div class="card-admin p-8">
-                <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-6">System Screenshots ({{ count($experience->foto_ss ?? []) }})</h3>
-                <div class="grid grid-cols-1 gap-6">
-                    @forelse($experience->foto_ss ?? [] as $foto)
-                    <div class="rounded-2xl overflow-hidden border border-white/10 bg-white/5">
-                        <img src="{{ asset('storage/experience/' . $foto) }}" class="w-full h-auto object-cover" alt="Screenshot">
-                        <div class="p-3 bg-black/40 text-center">
-                            <a href="{{ asset('storage/experience/' . $foto) }}" target="_blank" class="text-[10px] font-bold text-gray-500 hover:text-blue-400 transition uppercase tracking-widest">
-                                <i class="fas fa-expand mr-1"></i> Lihat Gambar Penuh
-                            </a>
-                        </div>
-                    </div>
-                    @empty
-                    <div class="py-20 text-center border-2 border-dashed border-white/5 rounded-3xl">
-                        <i class="fas fa-image text-4xl text-gray-700 mb-4 block"></i>
-                        <p class="text-gray-600 font-bold uppercase text-xs tracking-widest">Tidak ada screenshot</p>
-                    </div>
-                    @endforelse
-                </div>
-            </div>
         </div>
+    </div>
 
-        <div class="space-y-6">
-            <div class="card-admin p-6 bg-blue-600/5 border-blue-600/10">
-                <h3 class="text-xs font-bold text-blue-400 uppercase tracking-widest mb-4">Akses Project</h3>
-
-                <div class="space-y-4">
-                    <div>
-                        <p class="text-[10px] text-gray-500 uppercase font-bold mb-2">Live Website:</p>
-                        @if($experience->link_website)
-                        <a href="{{ $experience->link_website }}" target="_blank" class="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/10 hover:border-blue-500/50 transition group">
-                            <span class="text-xs text-white truncate mr-2">{{ $experience->link_website }}</span>
-                            <i class="fas fa-external-link-alt text-blue-500 text-xs group-hover:scale-110 transition"></i>
-                        </a>
-                        @else
-                        <p class="text-xs text-gray-600 italic">Link tidak tersedia</p>
-                        @endif
-                    </div>
-
-                    <div>
-                        <p class="text-[10px] text-gray-500 uppercase font-bold mb-2">Akun Demo / Credentials:</p>
-                        @if($experience->akun_demo)
-                        <div class="p-4 bg-[#050505] rounded-xl border border-white/5 font-mono text-xs text-blue-300 leading-relaxed">
-                            {!! nl2br(e($experience->akun_demo)) !!}
-                        </div>
-                        @else
-                        <p class="text-xs text-gray-600 italic">Info akun tidak tersedia</p>
-                        @endif
-                    </div>
-                </div>
-            </div>
-
-            <div class="card-admin p-6">
-                <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">Metadata</h3>
-                <div class="space-y-3">
-                    <div class="flex justify-between items-center border-b border-white/5 pb-2">
-                        <span class="text-[10px] text-gray-600 font-bold uppercase">ID Data</span>
-                        <span class="text-xs text-white">#{{ $experience->id }}</span>
-                    </div>
-                    <div class="flex justify-between items-center border-b border-white/5 pb-2">
-                        <span class="text-[10px] text-gray-600 font-bold uppercase">Dibuat</span>
-                        <span class="text-xs text-white">{{ $experience->created_at->format('d M Y') }}</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-[10px] text-gray-600 font-bold uppercase">Update</span>
-                        <span class="text-xs text-white">{{ $experience->updated_at->diffForHumans() }}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="mt-8 text-center">
+        <p class="text-xs text-gray-600">
+            <i class="fas fa-info-circle mr-1"></i> Data ini akan ditampilkan pada bagian "Resume/Experience" di Landing Page.
+        </p>
     </div>
 </div>
 @endsection

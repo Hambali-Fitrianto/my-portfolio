@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Experience;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class ExperienceController extends Controller
 {
@@ -24,28 +22,20 @@ class ExperienceController extends Controller
     {
         $request->validate([
             'perusahaan' => 'required',
+            'alamat'     => 'required',
             'posisi'     => 'required',
             'periode'    => 'required',
             'deskripsi'  => 'required',
-            'foto_ss.*'  => 'image|mimes:jpg,jpeg,png|max:5120', // Validasi tiap file
         ]);
 
-        $data = $request->except('foto_ss');
+        Experience::create($request->all());
 
-        // Handle Multiple Uploads
-        if ($request->hasFile('foto_ss')) {
-            $uploadedFiles = [];
-            foreach ($request->file('foto_ss') as $file) {
-                $namaFile = time() . '_' . Str::random(5) . '.' . $file->getClientOriginalExtension();
-                $file->storeAs('public/experience', $namaFile);
-                $uploadedFiles[] = $namaFile;
-            }
-            $data['foto_ss'] = $uploadedFiles; // Simpan array nama file
-        }
+        return redirect()->route('experience.index')->with('success', 'Riwayat pengalaman berhasil disimpan!');
+    }
 
-        Experience::create($data);
-
-        return redirect()->route('experience.index')->with('success', 'Pengalaman kerja berhasil ditambah!');
+    public function show(Experience $experience)
+    {
+        return view('experience.show', compact('experience'));
     }
 
     public function edit(Experience $experience)
@@ -55,38 +45,22 @@ class ExperienceController extends Controller
 
     public function update(Request $request, Experience $experience)
     {
-        // ... (Logika mirip store, tapi tambahkan hapus file lama jika perlu) ...
-        $data = $request->except('foto_ss');
+        $request->validate([
+            'perusahaan' => 'required',
+            'alamat'     => 'required',
+            'posisi'     => 'required',
+            'periode'    => 'required',
+            'deskripsi'  => 'required',
+        ]);
 
-        if ($request->hasFile('foto_ss')) {
-            // Hapus file lama di storage
-            if ($experience->foto_ss) {
-                foreach ($experience->foto_ss as $oldFile) {
-                    Storage::delete('public/experience/' . $oldFile);
-                }
-            }
+        $experience->update($request->all());
 
-            $uploadedFiles = [];
-            foreach ($request->file('foto_ss') as $file) {
-                $namaFile = time() . '_' . Str::random(5) . '.' . $file->getClientOriginalExtension();
-                $file->storeAs('public/experience', $namaFile);
-                $uploadedFiles[] = $namaFile;
-            }
-            $data['foto_ss'] = $uploadedFiles;
-        }
-
-        $experience->update($data);
-        return redirect()->route('experience.index')->with('success', 'Update berhasil!');
+        return redirect()->route('experience.index')->with('success', 'Riwayat pengalaman berhasil diupdate!');
     }
 
     public function destroy(Experience $experience)
     {
-        if ($experience->foto_ss) {
-            foreach ($experience->foto_ss as $file) {
-                Storage::delete('public/experience/' . $file);
-            }
-        }
         $experience->delete();
-        return back()->with('success', 'Data dihapus!');
+        return back()->with('success', 'Data pengalaman telah dihapus.');
     }
 }

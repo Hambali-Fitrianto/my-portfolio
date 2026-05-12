@@ -11,15 +11,10 @@ return new class extends Migration
         Schema::create('experiences', function (Blueprint $table) {
             $table->id();
             $table->string('perusahaan');
+            $table->string('alamat'); // Tambahan baru
             $table->string('posisi');
             $table->string('periode');
-            $table->text('deskripsi');
-
-            // Kolom Fleksibel (Opsional)
-            $table->string('link_website')->nullable();
-            $table->text('akun_demo')->nullable(); // Bisa simpan info login yang panjang
-            $table->text('foto_ss')->nullable();   // Kita simpan array nama file di sini
-
+            $table->text('deskripsi'); // Tugas teknis
             $table->timestamps();
         });
     }
