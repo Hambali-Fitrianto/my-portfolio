@@ -7,7 +7,6 @@
     <title>{{ $profile->nama ?? 'Hambali Fitrianto' }} | Portfolio</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
-
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
@@ -63,13 +62,13 @@
     <nav class="fixed top-0 w-full z-50 glass-nav">
         <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
             <div class="text-xl font-bold tracking-tighter text-white">
-                {{ strtoupper(explode(' ', $profile->nama ?? 'HAMBALI')[0]) }}<span class="text-accent">.</span>
+                {{ strtoupper($profile->nama ?? 'HAMBALI FITRIANTO') }}<span class="text-accent">.</span>
             </div>
 
             <div class="hidden md:flex items-center space-x-8 text-sm font-medium">
-                <a href="#about" class="hover:text-white transition">Tentang</a>
-                <a href="#projects" class="hover:text-white transition">Project</a>
-                <a href="mailto:{{ $profile->email ?? '' }}" class="bg-white text-black px-5 py-2 rounded-full font-bold hover:bg-gray-200 transition">
+                <a href="#about" class="hover:text-white transition text-gray-400">Tentang</a>
+                <a href="#projects" class="hover:text-white transition text-gray-400">Project</a>
+                <a href="mailto:{{ $profile->email ?? 'hambali.fitrianto01@gmail.com' }}" class="bg-white text-black px-5 py-2 rounded-full font-bold hover:bg-gray-200 transition">
                     Kontak
                 </a>
             </div>
@@ -84,7 +83,7 @@
         <div class="flex flex-col items-center text-center">
             <div class="mb-8 px-4 py-1.5 rounded-full border border-blue-500/20 bg-blue-500/5 text-blue-400 text-[10px] font-bold uppercase tracking-[0.2em]">
                 <span class="inline-block w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse mr-2"></span>
-                Web Developer & IT Programmer
+                {{ $profile->headline ?? 'Full-Stack Web Developer & System Integration' }}
             </div>
 
             @if($profile && $profile->foto)
@@ -103,18 +102,27 @@
                 {{ $profile->deskripsi_singkat ?? 'Saya seorang developer yang fokus pada efisiensi dan integrasi sistem.' }}
             </p>
 
-            <div class="mt-12 flex flex-wrap justify-center gap-4">
+            <div class="mt-12 flex flex-wrap justify-center items-center gap-6">
                 @if($profile && $profile->cv_file)
                 <a href="{{ asset('storage/cv/' . $profile->cv_file) }}" target="_blank"
-                    class="flex items-center gap-3 bg-white/5 border border-white/10 px-6 py-3 rounded-xl hover:bg-white/10 transition group">
+                    class="flex items-center gap-3 bg-white/5 border border-white/10 px-6 py-3 rounded-xl hover:bg-white/10 transition group shadow-xl">
                     <span class="text-sm font-bold text-white">Unduh CV</span>
                     <i class="fas fa-file-pdf text-red-400 group-hover:scale-110 transition"></i>
                 </a>
                 @endif
 
-                <div class="flex items-center gap-4 ml-0 md:ml-4">
-                    <a href="{{ $profile->github_url ?? '#' }}" class="text-gray-500 hover:text-white transition text-xl"><i class="fab fa-github"></i></a>
-                    <a href="{{ $profile->linkedin_url ?? '#' }}" class="text-gray-500 hover:text-white transition text-xl"><i class="fab fa-linkedin-in"></i></a>
+                <div class="flex items-center gap-6">
+                    @if($profile && $profile->github_url)
+                    <a href="{{ $profile->github_url }}" target="_blank" class="text-gray-500 hover:text-white transition text-2xl" title="GitHub">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    @endif
+
+                    @if($profile && $profile->linkedin_url)
+                    <a href="{{ $profile->linkedin_url }}" target="_blank" class="text-gray-500 hover:text-white transition text-2xl" title="LinkedIn">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    @endif
                 </div>
             </div>
         </div>
@@ -127,33 +135,48 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="card-gradient p-8 rounded-3xl hover:border-blue-500/30 transition-all duration-500 group">
+            <div class="card-gradient p-8 rounded-3xl hover:border-blue-500/30 transition-all duration-500 group relative overflow-hidden">
                 <div class="flex justify-between items-start mb-6">
                     <div class="p-3 rounded-2xl bg-blue-500/10 text-accent">
-                        <i class="fas fa-code text-xl"></i>
+                        <i class="fas fa-desktop text-xl"></i>
                     </div>
                     <i class="fas fa-arrow-right -rotate-45 text-gray-600 group-hover:text-white transition"></i>
                 </div>
-                <h4 class="text-xl font-bold text-white mb-3">E-Voting System</h4>
-                <p class="text-sm text-gray-500 leading-relaxed mb-6">Sistem pemungutan suara berbasis web menggunakan Laravel untuk keamanan dan real-time monitoring.</p>
+                <h4 class="text-xl font-bold text-white mb-3 text-balance">SAP Monitoring Center</h4>
+                <p class="text-sm text-gray-500 leading-relaxed mb-6">Real-time monitoring produksi yang terintegrasi langsung dengan Python RFC untuk tracking performa work center.</p>
                 <div class="flex gap-2">
-                    <span class="text-[10px] font-bold px-2 py-1 bg-white/5 rounded text-gray-400">Laravel</span>
-                    <span class="text-[10px] font-bold px-2 py-1 bg-white/5 rounded text-gray-400">MySQL</span>
+                    <span class="text-[10px] font-bold px-2 py-1 bg-white/5 rounded text-gray-400">Python</span>
+                    <span class="text-[10px] font-bold px-2 py-1 bg-white/5 rounded text-gray-400">SAP RFC</span>
                 </div>
             </div>
 
-            <div class="card-gradient p-8 rounded-3xl hover:border-blue-500/30 transition-all duration-500 group">
+            <div class="card-gradient p-8 rounded-3xl hover:border-blue-500/30 transition-all duration-500 group relative overflow-hidden">
                 <div class="flex justify-between items-start mb-6">
                     <div class="p-3 rounded-2xl bg-blue-500/10 text-accent">
-                        <i class="fas fa-database text-xl"></i>
+                        <i class="fas fa-tools text-xl"></i>
                     </div>
                     <i class="fas fa-arrow-right -rotate-45 text-gray-600 group-hover:text-white transition"></i>
                 </div>
-                <h4 class="text-xl font-bold text-white mb-3">SAP Monitor</h4>
-                <p class="text-sm text-gray-500 leading-relaxed mb-6">Monitoring produksi secara real-time yang terintegrasi langsung dengan API SAP enterprise.</p>
+                <h4 class="text-xl font-bold text-white mb-3">MainTENZ</h4>
+                <p class="text-sm text-gray-500 leading-relaxed mb-6">Sistem manajemen pemeliharaan terpadu untuk work order dan tracking KPI mekanik menggunakan API MaintainX.</p>
                 <div class="flex gap-2">
-                    <span class="text-[10px] font-bold px-2 py-1 bg-white/5 rounded text-gray-400">Python</span>
-                    <span class="text-[10px] font-bold px-2 py-1 bg-white/5 rounded text-gray-400">RFC</span>
+                    <span class="text-[10px] font-bold px-2 py-1 bg-white/5 rounded text-gray-400">Laravel</span>
+                    <span class="text-[10px] font-bold px-2 py-1 bg-white/5 rounded text-gray-400">API Integration</span>
+                </div>
+            </div>
+
+            <div class="card-gradient p-8 rounded-3xl hover:border-blue-500/30 transition-all duration-500 group relative overflow-hidden">
+                <div class="flex justify-between items-start mb-6">
+                    <div class="p-3 rounded-2xl bg-blue-500/10 text-accent">
+                        <i class="fas fa-users text-xl"></i>
+                    </div>
+                    <i class="fas fa-arrow-right -rotate-45 text-gray-600 group-hover:text-white transition"></i>
+                </div>
+                <h4 class="text-xl font-bold text-white mb-3 text-balance">Recruitment System</h4>
+                <p class="text-sm text-gray-500 leading-relaxed mb-6">Sistem rekrutmen HR yang terintegrasi dengan Mekari Talenta API menggunakan HMAC Authentication.</p>
+                <div class="flex gap-2">
+                    <span class="text-[10px] font-bold px-2 py-1 bg-white/5 rounded text-gray-400">Inertia.js</span>
+                    <span class="text-[10px] font-bold px-2 py-1 bg-white/5 rounded text-gray-400">HMAC</span>
                 </div>
             </div>
         </div>

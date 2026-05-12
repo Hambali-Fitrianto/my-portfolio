@@ -4,21 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Models\Profile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProfileController extends Controller
 {
     /**
-     * Menampilkan semua data profile (Index)
+     * Display all profiles
      */
     public function index()
     {
-        $profiles = Profile::all();
+        $profiles = Profile::latest()->get();
+
         return view('profile.index', compact('profiles'));
     }
 
     /**
-     * Menampilkan form untuk membuat profile baru (Create)
+     * Show create form
      */
     public function create()
     {
@@ -26,45 +29,83 @@ class ProfileController extends Controller
     }
 
     /**
-     * Menyimpan data profile baru ke database (Store)
+     * Store new profile
      */
     public function store(Request $request)
     {
         $request->validate([
             'nama'              => 'required|string|max:255',
             'headline'          => 'required|string|max:255',
-            'deskripsi_singkat' => 'required',
-            'email'             => 'required|email',
-            'no_hp'             => 'required',
+            'deskripsi_singkat' => 'required|string',
+            'email'             => 'required|email|max:255',
+            'no_hp'             => 'required|string|max:20',
+            'linkedin_url'      => 'nullable|url',
+            'github_url'        => 'nullable|url',
             'foto'              => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'cv_file'           => 'nullable|mimes:pdf|max:5120',
         ]);
 
-        $data = $request->all();
+        DB::beginTransaction();
 
-        // Upload Foto
-        if ($request->hasFile('foto')) {
-            $file = $request->file('foto');
-            $namaFoto = time() . '_profile.' . $file->getClientOriginalExtension();
-            $file->storeAs('public/profile', $namaFoto);
-            $data['foto'] = $namaFoto;
+        try {
+
+            $data = $request->except(['foto', 'cv_file']);
+
+            /**
+             * Upload Foto
+             */
+            if ($request->hasFile('foto')) {
+
+                $foto = $request->file('foto');
+
+                $namaFoto = time() . '_' . Str::slug($request->nama);
+
+                $pathFoto = $foto->storeAs(
+                    'profile',
+                    $namaFoto . '.' . $foto->getClientOriginalExtension(),
+                    'public'
+                );
+
+                $data['foto'] = basename($pathFoto);
+            }
+
+            /**
+             * Upload CV
+             */
+            if ($request->hasFile('cv_file')) {
+
+                $cv = $request->file('cv_file');
+
+                $namaCv = time() . '_' . Str::slug($request->nama);
+
+                $pathCv = $cv->storeAs(
+                    'cv',
+                    $namaCv . '.' . $cv->getClientOriginalExtension(),
+                    'public'
+                );
+
+                $data['cv_file'] = basename($pathCv);
+            }
+
+            Profile::create($data);
+
+            DB::commit();
+
+            return redirect()
+                ->route('profile.index')
+                ->with('success', 'Profile berhasil ditambahkan!');
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return back()
+                ->withInput()
+                ->with('error', $e->getMessage());
         }
-
-        // Upload CV
-        if ($request->hasFile('cv_file')) {
-            $file = $request->file('cv_file');
-            $namaCv = time() . '_cv.' . $file->getClientOriginalExtension();
-            $file->storeAs('public/cv', $namaCv);
-            $data['cv_file'] = $namaCv;
-        }
-
-        Profile::create($data);
-
-        return redirect()->route('profile.index')->with('success', 'Profile berhasil ditambahkan!');
     }
 
     /**
-     * Menampilkan detail satu profile (Show) - Opsional
+     * Show single profile
      */
     public function show(Profile $profile)
     {
@@ -72,7 +113,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * Menampilkan form edit untuk satu profile (Edit)
+     * Show edit form
      */
     public function edit(Profile $profile)
     {
@@ -80,64 +121,133 @@ class ProfileController extends Controller
     }
 
     /**
-     * Memperbarui data profile di database (Update)
+     * Update profile
      */
     public function update(Request $request, Profile $profile)
     {
         $request->validate([
             'nama'              => 'required|string|max:255',
             'headline'          => 'required|string|max:255',
-            'deskripsi_singkat' => 'required',
-            'email'             => 'required|email',
-            'no_hp'             => 'required',
+            'deskripsi_singkat' => 'required|string',
+            'email'             => 'required|email|max:255',
+            'no_hp'             => 'required|string|max:20',
+            'linkedin_url'      => 'nullable|url',
+            'github_url'        => 'nullable|url',
             'foto'              => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'cv_file'           => 'nullable|mimes:pdf|max:5120',
         ]);
 
-        $data = $request->all();
+        DB::beginTransaction();
 
-        // Update Foto
-        if ($request->hasFile('foto')) {
-            if ($profile->foto) {
-                Storage::delete('public/profile/' . $profile->foto);
+        try {
+
+            $data = $request->except(['foto', 'cv_file']);
+
+            /**
+             * Update Foto
+             */
+            if ($request->hasFile('foto')) {
+
+                // hapus foto lama
+                if (
+                    $profile->foto &&
+                    Storage::disk('public')->exists('profile/' . $profile->foto)
+                ) {
+
+                    Storage::disk('public')->delete('profile/' . $profile->foto);
+                }
+
+                $foto = $request->file('foto');
+
+                $namaFoto = time() . '_' . Str::slug($request->nama);
+
+                $pathFoto = $foto->storeAs(
+                    'profile',
+                    $namaFoto . '.' . $foto->getClientOriginalExtension(),
+                    'public'
+                );
+
+                $data['foto'] = basename($pathFoto);
             }
-            $file = $request->file('foto');
-            $namaFoto = time() . '_profile.' . $file->getClientOriginalExtension();
-            $file->storeAs('public/profile', $namaFoto);
-            $data['foto'] = $namaFoto;
-        }
 
-        // Update CV
-        if ($request->hasFile('cv_file')) {
-            if ($profile->cv_file) {
-                Storage::delete('public/cv/' . $profile->cv_file);
+            /**
+             * Update CV
+             */
+            if ($request->hasFile('cv_file')) {
+
+                // hapus cv lama
+                if (
+                    $profile->cv_file &&
+                    Storage::disk('public')->exists('cv/' . $profile->cv_file)
+                ) {
+
+                    Storage::disk('public')->delete('cv/' . $profile->cv_file);
+                }
+
+                $cv = $request->file('cv_file');
+
+                $namaCv = time() . '_' . Str::slug($request->nama);
+
+                $pathCv = $cv->storeAs(
+                    'cv',
+                    $namaCv . '.' . $cv->getClientOriginalExtension(),
+                    'public'
+                );
+
+                $data['cv_file'] = basename($pathCv);
             }
-            $file = $request->file('cv_file');
-            $namaCv = time() . '_cv.' . $file->getClientOriginalExtension();
-            $file->storeAs('public/cv', $namaCv);
-            $data['cv_file'] = $namaCv;
+
+            $profile->update($data);
+
+            DB::commit();
+
+            return redirect()
+                ->route('profile.index')
+                ->with('success', 'Profile berhasil diperbarui!');
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return back()
+                ->withInput()
+                ->with('error', $e->getMessage());
         }
-
-        $profile->update($data);
-
-        return redirect()->route('profile.index')->with('success', 'Profile berhasil diperbarui!');
     }
 
     /**
-     * Menghapus data profile (Delete)
+     * Delete profile
      */
     public function destroy(Profile $profile)
     {
-        // Hapus file fisik dari storage agar tidak penuh
-        if ($profile->foto) {
-            Storage::delete('public/profile/' . $profile->foto);
-        }
-        if ($profile->cv_file) {
-            Storage::delete('public/cv/' . $profile->cv_file);
-        }
+        try {
 
-        $profile->delete();
+            // hapus foto
+            if (
+                $profile->foto &&
+                Storage::disk('public')->exists('profile/' . $profile->foto)
+            ) {
 
-        return redirect()->route('profile.index')->with('success', 'Profile berhasil dihapus!');
+                Storage::disk('public')->delete('profile/' . $profile->foto);
+            }
+
+            // hapus cv
+            if (
+                $profile->cv_file &&
+                Storage::disk('public')->exists('cv/' . $profile->cv_file)
+            ) {
+
+                Storage::disk('public')->delete('cv/' . $profile->cv_file);
+            }
+
+            $profile->delete();
+
+            return redirect()
+                ->route('profile.index')
+                ->with('success', 'Profile berhasil dihapus!');
+        } catch (\Exception $e) {
+
+            return back()
+                ->with('error', $e->getMessage());
+        }
     }
 }

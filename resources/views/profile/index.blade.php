@@ -38,12 +38,17 @@
                 </td>
                 <td class="p-5">
                     <div class="flex justify-center gap-2">
-                        <a href="{{ route('profile.edit', $item->id) }}" class="p-2 bg-yellow-500/10 text-yellow-500 rounded-lg hover:bg-yellow-500 hover:text-black transition">
+                        <a href="{{ route('profile.show', $item->id) }}" class="p-2 bg-blue-500/10 text-blue-500 rounded-lg hover:bg-blue-500 hover:text-white transition" title="Lihat Detail">
+                            <i class="fas fa-eye"></i>
+                        </a>
+
+                        <a href="{{ route('profile.edit', $item->id) }}" class="p-2 bg-yellow-500/10 text-yellow-500 rounded-lg hover:bg-yellow-500 hover:text-black transition" title="Edit Data">
                             <i class="fas fa-edit"></i>
                         </a>
+
                         <form action="{{ route('profile.destroy', $item->id) }}" method="POST" class="inline">
                             @csrf @method('DELETE')
-                            <button type="submit" class="p-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition" onclick="return confirm('Hapus profil ini?')">
+                            <button type="submit" class="p-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition" onclick="return confirm('Hapus profil ini?')" title="Hapus Data">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </form>
