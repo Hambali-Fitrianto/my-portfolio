@@ -83,9 +83,10 @@
                     <i class="fas fa-graduation-cap w-5"></i>
                     <span class="text-sm font-semibold">Education</span>
                 </a>
-                <a href="#" class="nav-link flex items-center gap-3 px-4 py-3 opacity-50 cursor-not-allowed italic">
+
+                <a href="{{ route('projects.index') }}" class="nav-link flex items-center gap-3 px-4 py-3 {{ request()->routeIs('projects.*') ? 'active' : '' }}">
                     <i class="fas fa-project-diagram w-5"></i>
-                    <span class="text-sm font-semibold text-xs">Soon: Projects</span>
+                    <span class="text-sm font-semibold">Projects</span>
                 </a>
             </nav>
         </div>
@@ -113,8 +114,8 @@
 
             <div class="flex items-center gap-3">
                 <div class="text-right hidden sm:block">
-                    <p class="text-xs font-bold text-white leading-none">Hambali Fitrianto </p>
-                    <p class="text-[10px] text-gray-500 mt-1">IT Operator </p>
+                    <p class="text-xs font-bold text-white leading-none">Hambali Fitrianto</p>
+                    <p class="text-[10px] text-gray-500 mt-1">IT Operator</p>
                 </div>
                 <div class="w-10 h-10 rounded-xl bg-blue-600/20 flex items-center justify-center text-blue-500 border border-blue-500/20 font-bold">
                     H
