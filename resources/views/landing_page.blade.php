@@ -8,7 +8,7 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
@@ -69,6 +69,25 @@
         html:not(.dark) .hero-glow {
             background: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.05) 0%, rgba(248, 250, 252, 0) 70%);
         }
+
+        /* Utility custom scrollbar untuk modal yang rapi */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 999px;
+        }
+
+        html:not(.dark) .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 
@@ -78,23 +97,23 @@
 
     <nav class="fixed top-0 w-full z-40 glass-nav">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 h-20 flex justify-between items-center">
-            <div class="text-xl font-bold tracking-tighter text-slate-900 dark:text-white">
+            <div class="text-xl font-black tracking-tighter text-slate-900 dark:text-white">
                 {{ strtoupper($profile->nama ?? 'HAMBALI FITRIANTO') }}<span class="text-accent">.</span>
             </div>
 
             <div class="flex items-center space-x-4 sm:space-x-8 text-sm font-medium">
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="#about" class="hover:text-slate-900 dark:hover:text-white transition text-slate-500 dark:text-gray-400">Tentang</a>
-                    <a href="#experience" class="hover:text-slate-900 dark:hover:text-white transition text-slate-500 dark:text-gray-400">Pengalaman</a>
-                    <a href="#education" class="hover:text-slate-900 dark:hover:text-white transition text-slate-500 dark:text-gray-400">Pendidikan</a>
-                    <a href="#projects" class="hover:text-slate-900 dark:hover:text-white transition text-slate-500 dark:text-gray-400">Project</a>
+                    <a href="#about" class="hover:text-slate-900 dark:hover:text-white transition text-slate-500 dark:text-gray-400 font-semibold">Tentang</a>
+                    <a href="#experience" class="hover:text-slate-900 dark:hover:text-white transition text-slate-500 dark:text-gray-400 font-semibold">Pengalaman</a>
+                    <a href="#education" class="hover:text-slate-900 dark:hover:text-white transition text-slate-500 dark:text-gray-400 font-semibold">Pendidikan</a>
+                    <a href="#projects" class="hover:text-slate-900 dark:hover:text-white transition text-slate-500 dark:text-gray-400 font-semibold">Project</a>
                 </div>
 
-                <button onclick="toggleTheme()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-200/60 dark:bg-white/5 border border-slate-300/50 dark:border-white/10 text-slate-800 dark:text-white hover:scale-105 transition" title="Ubah Tema">
+                <button onclick="toggleTheme()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-200/60 dark:bg-white/5 border border-slate-300/50 dark:border-white/10 text-slate-800 dark:text-white hover:scale-105 transition shadow-sm" title="Ubah Tema">
                     <i id="theme-icon" class="fas fa-moon"></i>
                 </button>
 
-                <a href="mailto:{{ $profile->email ?? 'hambali.fitrianto01@gmail.com' }}" class="hidden sm:inline-block bg-slate-900 text-white dark:bg-white dark:text-black px-5 py-2 rounded-full font-bold hover:opacity-90 transition">
+                <a href="mailto:{{ $profile->email ?? 'hambali.fitrianto01@gmail.com' }}" class="hidden sm:inline-block bg-slate-900 text-white dark:bg-white dark:text-black px-5 py-2 rounded-full font-bold hover:opacity-90 transition shadow-md">
                     Kontak
                 </a>
             </div>
@@ -120,7 +139,7 @@
                 {{ $profile->headline ?? 'Membangun Sistem Terintegrasi & Otomatisasi Efisien.' }}
             </h1>
 
-            <p class="mt-6 text-slate-500 dark:text-gray-400 text-sm sm:text-base md:text-lg max-w-3xl leading-relaxed">
+            <p class="mt-6 text-slate-500 dark:text-gray-400 text-sm sm:text-base md:text-lg max-w-3xl leading-relaxed font-medium">
                 @if($profile && $profile->deskripsi_singkat)
                 {!! nl2br(e($profile->deskripsi_singkat)) !!}
                 @else
@@ -240,7 +259,7 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse($projects as $project)
-            <div class="card-gradient rounded-3xl overflow-hidden flex flex-col justify-between group bg-white/5 shadow-lg hover:shadow-xl transition duration-300">
+            <div class="card-gradient rounded-3xl overflow-hidden flex flex-col justify-between group bg-white/5 shadow-lg hover:shadow-xl transition-all duration-300">
                 <div>
                     <div class="relative aspect-video w-full overflow-hidden bg-black/50 border-b border-slate-200/10 dark:border-white/5">
                         @if($project->images->count() > 0)
@@ -282,7 +301,7 @@
 
                     <div class="grid grid-cols-2 gap-3 pt-3 border-t border-slate-200 dark:border-white/5">
                         <button type="button"
-                            class="btn-open-detail w-full text-center py-2.5 px-3 bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-900 dark:text-white text-xs font-bold rounded-xl border border-slate-300/50 dark:border-white/10 transition flex items-center justify-center gap-1.5"
+                            class="btn-open-detail w-full text-center py-2.5 px-3 bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-900 dark:text-white text-xs font-bold rounded-xl border border-slate-300/50 dark:border-white/10 transition flex items-center justify-center gap-1.5 cursor-pointer"
                             data-name="{{ $project->nama_project }}"
                             data-desc="{{ $project->deskripsi }}"
                             data-features="{{ $project->fitur_kunci }}"
@@ -329,48 +348,48 @@
     </footer>
 
     <div id="portfolioModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-sm opacity-0 transition-opacity duration-300">
-        <div class="bg-[#0f0f11] border border-white/10 rounded-3xl max-w-4xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300">
-            <div class="px-6 py-4 border-b border-white/5 flex justify-between items-center bg-white/[0.01]">
-                <h3 id="modalProjectName" class="text-base font-black text-white tracking-tight">Detail Project</h3>
-                <button type="button" id="closePortfolioModal" class="text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 w-8 h-8 rounded-xl flex items-center justify-center transition">
+        <div class="bg-slate-50 dark:bg-[#0f0f11] border border-slate-200 dark:border-white/10 rounded-3xl max-w-4xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300">
+            <div class="px-6 py-4 border-b border-slate-200 dark:border-white/5 flex justify-between items-center bg-white/[0.01]">
+                <h3 id="modalProjectName" class="text-lg font-black text-slate-900 dark:text-white tracking-tight">Detail Project</h3>
+                <button type="button" id="closePortfolioModal" class="text-gray-400 hover:text-slate-900 dark:hover:text-white bg-slate-200/50 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 w-8 h-8 rounded-xl flex items-center justify-center transition cursor-pointer">
                     <i class="fas fa-times text-xs"></i>
                 </button>
             </div>
 
-            <div class="p-6 overflow-y-auto space-y-6 flex-1 text-sm text-gray-300">
-                <div>
-                    <h5 class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">Fungsionalitas Sistem</h5>
-                    <p id="modalProjectDesc" class="leading-relaxed text-gray-400 text-xs sm:text-sm whitespace-pre-line"></p>
+            <div class="p-6 overflow-y-auto space-y-6 flex-1 text-sm text-slate-700 dark:text-gray-300 custom-scrollbar">
+                <div class="space-y-1.5">
+                    <h5 class="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Fungsionalitas Sistem</h5>
+                    <p id="modalProjectDesc" class="leading-relaxed text-slate-600 dark:text-gray-400 text-xs sm:text-sm whitespace-pre-line"></p>
                 </div>
 
-                <div id="modalFeaturesWrapper">
-                    <h5 class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">Fitur Unggulan</h5>
-                    <div id="modalProjectFeatures" class="p-4 bg-white/[0.02] border border-white/5 rounded-xl font-mono text-xs text-blue-400 whitespace-pre-line leading-relaxed"></div>
+                <div id="modalFeaturesWrapper" class="space-y-1.5">
+                    <h5 class="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Fitur Unggulan</h5>
+                    <div id="modalProjectFeatures" class="p-4 bg-slate-100 dark:bg-white/[0.02] border border-slate-200 dark:border-white/5 rounded-xl font-mono text-xs text-blue-600 dark:text-blue-400 whitespace-pre-line leading-relaxed"></div>
                 </div>
 
-                <div id="modalAccountsWrapper">
-                    <h5 class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">Akses Akun Uji Coba</h5>
-                    <div class="overflow-x-auto border border-white/5 rounded-xl bg-white/[0.01]">
-                        <table class="w-full text-left text-xs text-gray-400">
-                            <thead class="bg-white/5 text-gray-400 uppercase font-bold text-[9px] tracking-wider">
+                <div id="modalAccountsWrapper" class="space-y-2">
+                    <h5 class="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Akses Akun Uji Coba</h5>
+                    <div class="overflow-x-auto border border-slate-200 dark:border-white/5 rounded-xl bg-white/50 dark:bg-white/[0.01]">
+                        <table class="w-full text-left text-xs min-w-[500px] sm:min-w-full">
+                            <thead class="bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-gray-400 uppercase font-bold text-[9px] tracking-wider border-b border-slate-200 dark:border-white/5">
                                 <tr>
-                                    <th class="px-4 py-2.5">Hak Akses / Role</th>
-                                    <th class="px-4 py-2.5">Username / Email</th>
-                                    <th class="px-4 py-2.5">Password</th>
+                                    <th class="px-4 py-3">Hak Akses / Role</th>
+                                    <th class="px-4 py-3">Username / Email</th>
+                                    <th class="px-4 py-3">Password</th>
                                 </tr>
                             </thead>
-                            <tbody id="modalProjectAccounts" class="divide-y divide-white/5 font-mono text-xs"></tbody>
+                            <tbody id="modalProjectAccounts" class="divide-y divide-slate-200 dark:divide-white/5 font-mono text-xs text-slate-700 dark:text-gray-300"></tbody>
                         </table>
                     </div>
                 </div>
 
-                <div id="modalImagesWrapper">
-                    <h5 class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-3">Galeri Antarmuka Aplikasi</h5>
+                <div id="modalImagesWrapper" class="space-y-3">
+                    <h5 class="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Galeri Antarmuka Aplikasi</h5>
                     <div id="modalProjectImages" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
                 </div>
             </div>
 
-            <div id="modalActionFooter" class="px-6 py-4 border-t border-white/5 bg-white/[0.01] flex justify-end items-center">
+            <div id="modalActionFooter" class="px-6 py-4 border-t border-slate-200 dark:border-white/5 bg-slate-100 dark:bg-white/[0.01] flex justify-end items-center">
                 <a id="modalDemoLink" href="#" target="_blank"
                     class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs px-6 py-3 rounded-xl shadow-lg shadow-blue-500/20 transition group/modalBtn">
                     <span>Eksplorasi Aplikasi Sekarang</span>
@@ -381,6 +400,7 @@
     </div>
 
     <script>
+        // HANDLING THEME (DARK / LIGHT)
         if (localStorage.getItem('theme') === 'light') {
             document.documentElement.classList.remove('dark');
             document.getElementById('theme-icon').className = 'fas fa-sun';
@@ -404,11 +424,15 @@
             }
         }
 
+        // HANDLER MODAL INTERAKTIF & LOCK BACKGROUND SCROLLING
         document.addEventListener('DOMContentLoaded', function() {
             const modal = document.getElementById('portfolioModal');
             const btnClose = document.getElementById('closePortfolioModal');
             const modalDemoLink = document.getElementById('modalDemoLink');
             const modalActionFooter = document.getElementById('modalActionFooter');
+
+            const htmlElement = document.documentElement;
+            const bodyElement = document.body;
 
             document.querySelectorAll('.btn-open-detail').forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -422,7 +446,7 @@
                     document.getElementById('modalProjectName').innerText = name;
                     document.getElementById('modalProjectDesc').innerText = desc;
 
-                    // Pengaturan Link Demo Utama di dalam Modal
+                    // Validasi Ketersediaan Link Demo Utama di Dalam Modal
                     if (link && link.trim() !== "") {
                         modalActionFooter.classList.remove('hidden');
                         modalDemoLink.setAttribute('href', link);
@@ -430,6 +454,7 @@
                         modalActionFooter.classList.add('hidden');
                     }
 
+                    // Render Fitur Unggulan
                     const featWrapper = document.getElementById('modalFeaturesWrapper');
                     if (features && features.trim() !== "") {
                         featWrapper.classList.remove('hidden');
@@ -438,6 +463,7 @@
                         featWrapper.classList.add('hidden');
                     }
 
+                    // Render Kredensial Akun
                     const accWrapper = document.getElementById('modalAccountsWrapper');
                     const accTbody = document.getElementById('modalProjectAccounts');
                     accTbody.innerHTML = '';
@@ -445,11 +471,11 @@
                         accWrapper.classList.remove('hidden');
                         accounts.forEach(acc => {
                             const tr = document.createElement('tr');
-                            tr.className = 'hover:bg-white/[0.01]';
+                            tr.className = 'border-b border-slate-200 dark:border-white/5 last:border-0';
                             tr.innerHTML = `
-                                <td class="px-4 py-2.5 font-bold text-white">${acc.role_akses}</td>
-                                <td class="px-4 py-2.5 text-gray-300 select-all">${acc.username}</td>
-                                <td class="px-4 py-2.5 text-gray-300 select-all">${acc.password}</td>
+                                <td class="px-4 py-3 font-bold text-slate-900 dark:text-white">${acc.role_akses}</td>
+                                <td class="px-4 py-3 text-slate-600 dark:text-gray-300 select-all">${acc.username}</td>
+                                <td class="px-4 py-3 text-slate-600 dark:text-gray-300 select-all">${acc.password}</td>
                             `;
                             accTbody.appendChild(tr);
                         });
@@ -457,6 +483,7 @@
                         accWrapper.classList.add('hidden');
                     }
 
+                    // Render Gambar Screenshots
                     const imgWrapper = document.getElementById('modalImagesWrapper');
                     const imgContainer = document.getElementById('modalProjectImages');
                     imgContainer.innerHTML = '';
@@ -464,13 +491,17 @@
                         imgWrapper.classList.remove('hidden');
                         images.forEach(src => {
                             const item = document.createElement('div');
-                            item.className = 'relative aspect-video rounded-xl overflow-hidden border border-white/5 bg-black';
+                            item.className = 'relative aspect-video rounded-xl overflow-hidden border border-slate-200 dark:border-white/5 bg-black shadow-inner';
                             item.innerHTML = `<img src="${src}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/600x400/222/555?text=Preview+Error'">`;
                             imgContainer.appendChild(item);
                         });
                     } else {
                         imgWrapper.classList.add('hidden');
                     }
+
+                    // AKSI BUKA MODAL & KUNCI SCROLL BACKGROUND
+                    htmlElement.classList.add('overflow-hidden');
+                    bodyElement.classList.add('overflow-hidden');
 
                     modal.classList.remove('hidden');
                     modal.classList.add('flex');
@@ -481,12 +512,17 @@
                 });
             });
 
+            // FUNGSI TUTUP MODAL & KEMBALIKAN SCROLL
             function closeModal() {
                 modal.classList.add('opacity-0');
                 modal.querySelector('.transform').classList.add('scale-95');
                 setTimeout(() => {
                     modal.classList.remove('flex');
                     modal.classList.add('hidden');
+
+                    // Kembalikan fungsi scroll background
+                    htmlElement.classList.remove('overflow-hidden');
+                    bodyElement.classList.remove('overflow-hidden');
                 }, 300);
             }
 
