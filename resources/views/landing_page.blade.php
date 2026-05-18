@@ -70,7 +70,6 @@
             background: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.05) 0%, rgba(248, 250, 252, 0) 70%);
         }
 
-        /* Utility custom scrollbar untuk modal yang rapi */
         .custom-scrollbar::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -91,7 +90,7 @@
     </style>
 </head>
 
-<body class="bg-lightBg text-slate-700 dark:bg-darkBg dark:text-gray-300 antialiased font-sans">
+<body class="bg-lightBg text-slate-700 dark:bg-darkBg dark:text-gray-300 antialiased font-sans relative">
 
     <div class="hero-glow"></div>
 
@@ -102,14 +101,15 @@
             </div>
 
             <div class="flex items-center space-x-4 sm:space-x-8 text-sm font-medium">
-                <div class="hidden md:flex items-center space-x-8">
+                <div class="hidden md:flex items-center space-x-6">
                     <a href="#about" class="hover:text-slate-900 dark:hover:text-white transition text-slate-500 dark:text-gray-400 font-semibold">Tentang</a>
-                    <a href="#experience" class="hover:text-slate-900 dark:hover:text-white transition text-slate-500 dark:text-gray-400 font-semibold">Pengalaman</a>
                     <a href="#education" class="hover:text-slate-900 dark:hover:text-white transition text-slate-500 dark:text-gray-400 font-semibold">Pendidikan</a>
+                    <a href="#experience" class="hover:text-slate-900 dark:hover:text-white transition text-slate-500 dark:text-gray-400 font-semibold">Pengalaman</a>
                     <a href="#projects" class="hover:text-slate-900 dark:hover:text-white transition text-slate-500 dark:text-gray-400 font-semibold">Project</a>
+                    <a href="#skills" class="hover:text-slate-900 dark:hover:text-white transition text-slate-500 dark:text-gray-400 font-semibold">Skill</a>
                 </div>
 
-                <button onclick="toggleTheme()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-200/60 dark:bg-white/5 border border-slate-300/50 dark:border-white/10 text-slate-800 dark:text-white hover:scale-105 transition shadow-sm" title="Ubah Tema">
+                <button onclick="toggleTheme()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-200/60 dark:bg-white/5 border border-slate-300/50 dark:border-white/10 text-slate-800 dark:text-white hover:scale-105 transition shadow-sm cursor-pointer" title="Ubah Tema">
                     <i id="theme-icon" class="fas fa-moon"></i>
                 </button>
 
@@ -173,37 +173,6 @@
         </div>
     </section>
 
-    <section id="experience" class="max-w-5xl mx-auto px-4 sm:px-6 py-24 border-t border-slate-200 dark:border-white/5">
-        <div class="mb-16 text-center md:text-left">
-            <h2 class="text-xs font-bold text-accent uppercase tracking-[0.3em] mb-3">Riwayat Kerja</h2>
-            <h3 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">Pengalaman Profesional.</h3>
-        </div>
-
-        <div class="space-y-12">
-            @forelse($experiences as $exp)
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 pt-8 border-t border-slate-200/60 dark:border-white/5 first:border-t-0 first:pt-0">
-                <div class="space-y-1">
-                    <span class="text-xs font-bold text-slate-400 dark:text-gray-500 font-mono">{{ $exp->periode }}</span>
-                    <h4 class="text-xl font-black text-slate-900 dark:text-white tracking-tight">{{ $exp->posisi }}</h4>
-                    <p class="text-sm font-bold text-accent">{{ $exp->perusahaan }}</p>
-                    <p class="text-xs text-slate-400 italic dark:text-gray-500">{{ $exp->alamat }}</p>
-                </div>
-
-                <div class="md:col-span-2">
-                    <div class="card-gradient p-6 rounded-2xl text-sm leading-relaxed text-slate-600 dark:text-gray-400">
-                        <p class="text-[10px] font-bold text-slate-400 dark:text-gray-500 uppercase tracking-widest mb-3">Tanggung Jawab Teknis:</p>
-                        <div class="space-y-2">
-                            {!! nl2br(e($exp->deskripsi)) !!}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            @empty
-            <p class="text-center text-sm text-gray-500 italic">Belum ada data pengalaman kerja.</p>
-            @endforelse
-        </div>
-    </section>
-
     <section id="education" class="max-w-5xl mx-auto px-4 sm:px-6 py-24 border-t border-slate-200 dark:border-white/5">
         <div class="mb-14 text-center md:text-left">
             <h2 class="text-xs font-bold text-accent uppercase tracking-[0.3em] mb-3">Edukasi</h2>
@@ -247,6 +216,37 @@
             </div>
             @empty
             <p class="text-center text-sm text-gray-500 italic">Belum ada data riwayat pendidikan.</p>
+            @endforelse
+        </div>
+    </section>
+
+    <section id="experience" class="max-w-5xl mx-auto px-4 sm:px-6 py-24 border-t border-slate-200 dark:border-white/5">
+        <div class="mb-16 text-center md:text-left">
+            <h2 class="text-xs font-bold text-accent uppercase tracking-[0.3em] mb-3">Riwayat Kerja</h2>
+            <h3 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">Pengalaman Profesional.</h3>
+        </div>
+
+        <div class="space-y-12">
+            @forelse($experiences as $exp)
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 pt-8 border-t border-slate-200/60 dark:border-white/5 first:border-t-0 first:pt-0">
+                <div class="space-y-1">
+                    <span class="text-xs font-bold text-slate-400 dark:text-gray-500 font-mono">{{ $exp->periode }}</span>
+                    <h4 class="text-xl font-black text-slate-900 dark:text-white tracking-tight">{{ $exp->posisi }}</h4>
+                    <p class="text-sm font-bold text-accent">{{ $exp->perusahaan }}</p>
+                    <p class="text-xs text-slate-400 italic dark:text-gray-500">{{ $exp->alamat }}</p>
+                </div>
+
+                <div class="md:col-span-2">
+                    <div class="card-gradient p-6 rounded-2xl text-sm leading-relaxed text-slate-600 dark:text-gray-400">
+                        <p class="text-[10px] font-bold text-slate-400 dark:text-gray-500 uppercase tracking-widest mb-3">Tanggung Jawab Teknis:</p>
+                        <div class="space-y-2">
+                            {!! nl2br(e($exp->deskripsi)) !!}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @empty
+            <p class="text-center text-sm text-gray-500 italic">Belum ada data pengalaman kerja.</p>
             @endforelse
         </div>
     </section>
@@ -337,15 +337,47 @@
         </div>
     </section>
 
+    <section id="skills" class="max-w-5xl mx-auto px-4 sm:px-6 py-24 border-t border-slate-200 dark:border-white/5">
+        <div class="mb-16 text-center md:text-left">
+            <h2 class="text-xs font-bold text-accent uppercase tracking-[0.3em] mb-4">Keahlian</h2>
+            <h3 class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white tracking-tight">Tech Stack & Infrastructure.</h3>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            @forelse($skills as $skill)
+            <div class="card-gradient p-4 rounded-2xl flex items-center gap-3.5 bg-white/5 hover:scale-[1.02] hover:border-blue-500/20 transition-all duration-300 group/card">
+                <div class="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/5 group-hover/card:bg-blue-600 group-hover/card:text-white flex items-center justify-center text-accent text-lg transition duration-300 flex-shrink-0">
+                    <i class="{{ $skill->ikon ?? 'fas fa-laptop-code' }}"></i>
+                </div>
+                <div class="overflow-hidden flex-1">
+                    <h5 class="text-sm font-bold text-slate-900 dark:text-white truncate" title="{{ $skill->nama_skill }}">{{ $skill->nama_skill }}</h5>
+                    <span class="text-[10px] text-slate-400 block truncate" title="{{ $skill->kategori }}">{{ $skill->kategori }}</span>
+                </div>
+            </div>
+            @empty
+            <div class="col-span-2 sm:col-span-3 md:col-span-4 py-12 text-center text-slate-400 dark:text-gray-600 border border-dashed border-white/5 rounded-2xl">
+                <i class="fas fa-laptop-code text-3xl mb-2 opacity-30"></i>
+                <p class="text-xs italic">Daftar keahlian belum ditambahkan di panel admin.</p>
+            </div>
+            @endforelse
+        </div>
+    </section>
+
     <footer class="border-t border-slate-200 dark:border-white/5 py-12 bg-slate-100 dark:bg-transparent">
         <div class="max-w-5xl mx-auto px-4 text-center">
-            <p class="text-xs font-bold uppercase tracking-[0.4em] text-slate-400 dark:text-gray-600 mb-3 italic">Build version 2.5</p>
+            <p class="text-xs font-bold uppercase tracking-[0.4em] text-slate-400 dark:text-gray-600 mb-3 italic">Build version 2.6</p>
             <h2 class="text-xl font-bold text-slate-900 dark:text-white tracking-tighter">{{ strtoupper($profile->nama ?? 'Hambali Fitrianto') }}</h2>
             <div class="mt-6 text-slate-400 dark:text-gray-600 text-[10px] tracking-widest uppercase">
                 &copy; {{ date('Y') }} Hak Cipta Dilindungi.
             </div>
         </div>
     </footer>
+
+    <button id="backToTopBtn" type="button"
+        class="fixed bottom-6 right-6 z-50 p-3.5 rounded-2xl bg-blue-600/90 text-white shadow-xl shadow-blue-500/20 hover:bg-blue-600 hover:scale-110 active:scale-95 transition-all duration-300 opacity-0 translate-y-4 pointer-events-none cursor-pointer backdrop-blur-sm border border-white/10 flex items-center justify-center"
+        title="Kembali ke Atas">
+        <i class="fas fa-chevron-up text-sm animate-bounce"></i>
+    </button>
 
     <div id="portfolioModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-sm opacity-0 transition-opacity duration-300">
         <div class="bg-slate-50 dark:bg-[#0f0f11] border border-slate-200 dark:border-white/10 rounded-3xl max-w-4xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300">
@@ -424,16 +456,36 @@
             }
         }
 
-        // HANDLER MODAL INTERAKTIF & LOCK BACKGROUND SCROLLING
+        // CONTROL LOGIC JAVASCRIPT
         document.addEventListener('DOMContentLoaded', function() {
             const modal = document.getElementById('portfolioModal');
             const btnClose = document.getElementById('closePortfolioModal');
             const modalDemoLink = document.getElementById('modalDemoLink');
             const modalActionFooter = document.getElementById('modalActionFooter');
+            const backToTopBtn = document.getElementById('backToTopBtn');
 
             const htmlElement = document.documentElement;
             const bodyElement = document.body;
 
+            // LOGIC UTK TOMBOL BACK TO TOP (DIPICU SCROLL SEJAUH 300px)
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 300) {
+                    backToTopBtn.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+                    backToTopBtn.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto');
+                } else {
+                    backToTopBtn.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
+                    backToTopBtn.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+                }
+            });
+
+            backToTopBtn.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            // MODAL DISPLAYER
             document.querySelectorAll('.btn-open-detail').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const name = this.getAttribute('data-name');
@@ -446,7 +498,6 @@
                     document.getElementById('modalProjectName').innerText = name;
                     document.getElementById('modalProjectDesc').innerText = desc;
 
-                    // Validasi Ketersediaan Link Demo Utama di Dalam Modal
                     if (link && link.trim() !== "") {
                         modalActionFooter.classList.remove('hidden');
                         modalDemoLink.setAttribute('href', link);
@@ -454,7 +505,6 @@
                         modalActionFooter.classList.add('hidden');
                     }
 
-                    // Render Fitur Unggulan
                     const featWrapper = document.getElementById('modalFeaturesWrapper');
                     if (features && features.trim() !== "") {
                         featWrapper.classList.remove('hidden');
@@ -463,7 +513,6 @@
                         featWrapper.classList.add('hidden');
                     }
 
-                    // Render Kredensial Akun
                     const accWrapper = document.getElementById('modalAccountsWrapper');
                     const accTbody = document.getElementById('modalProjectAccounts');
                     accTbody.innerHTML = '';
@@ -483,7 +532,6 @@
                         accWrapper.classList.add('hidden');
                     }
 
-                    // Render Gambar Screenshots
                     const imgWrapper = document.getElementById('modalImagesWrapper');
                     const imgContainer = document.getElementById('modalProjectImages');
                     imgContainer.innerHTML = '';
@@ -499,7 +547,7 @@
                         imgWrapper.classList.add('hidden');
                     }
 
-                    // AKSI BUKA MODAL & KUNCI SCROLL BACKGROUND
+                    // Kunci scroll body di belakang modal
                     htmlElement.classList.add('overflow-hidden');
                     bodyElement.classList.add('overflow-hidden');
 
@@ -512,7 +560,6 @@
                 });
             });
 
-            // FUNGSI TUTUP MODAL & KEMBALIKAN SCROLL
             function closeModal() {
                 modal.classList.add('opacity-0');
                 modal.querySelector('.transform').classList.add('scale-95');
@@ -520,7 +567,7 @@
                     modal.classList.remove('flex');
                     modal.classList.add('hidden');
 
-                    // Kembalikan fungsi scroll background
+                    // Kembalikan fungsi scroll normal halaman utama
                     htmlElement.classList.remove('overflow-hidden');
                     bodyElement.classList.remove('overflow-hidden');
                 }, 300);

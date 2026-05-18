@@ -75,18 +75,21 @@
                     <i class="fas fa-user-circle w-5"></i>
                     <span class="text-sm font-semibold">Manajemen Profil</span>
                 </a>
-                <a href="{{ route('experience.index') }}" class="nav-link flex items-center gap-3 px-4 py-3 {{ request()->routeIs('experience.*') ? 'active' : '' }}">
-                    <i class="fas fa-briefcase w-5"></i>
-                    <span class="text-sm font-semibold">Experience</span>
-                </a>
                 <a href="{{ route('education.index') }}" class="nav-link flex items-center gap-3 px-4 py-3 {{ request()->routeIs('education.*') ? 'active' : '' }}">
                     <i class="fas fa-graduation-cap w-5"></i>
                     <span class="text-sm font-semibold">Education</span>
                 </a>
-
+                <a href="{{ route('experience.index') }}" class="nav-link flex items-center gap-3 px-4 py-3 {{ request()->routeIs('experience.*') ? 'active' : '' }}">
+                    <i class="fas fa-briefcase w-5"></i>
+                    <span class="text-sm font-semibold">Experience</span>
+                </a>
                 <a href="{{ route('projects.index') }}" class="nav-link flex items-center gap-3 px-4 py-3 {{ request()->routeIs('projects.*') ? 'active' : '' }}">
                     <i class="fas fa-project-diagram w-5"></i>
                     <span class="text-sm font-semibold">Projects</span>
+                </a>
+                <a href="{{ route('skills.index') }}" class="nav-link flex items-center gap-3 px-4 py-3 {{ request()->routeIs('skills.*') ? 'active' : '' }}">
+                    <i class="fas fa-laptop-code w-5"></i>
+                    <span class="text-sm font-semibold">Skills</span>
                 </a>
             </nav>
         </div>
@@ -94,7 +97,7 @@
         <div class="mt-auto p-6 border-t border-white/5">
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
-                <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-500/10 rounded-xl transition font-semibold text-sm">
+                <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-500/10 rounded-xl transition font-semibold text-sm cursor-pointer">
                     <i class="fas fa-sign-out-alt w-5"></i> Keluar
                 </button>
             </form>
@@ -104,7 +107,7 @@
     <main id="main-content" class="flex-1 h-screen overflow-y-auto bg-[#050505] relative">
         <header class="p-6 flex justify-between items-center sticky top-0 bg-[#050505]/80 backdrop-blur-md z-40 border-b border-white/5">
             <div class="flex items-center gap-4">
-                <button onclick="toggleSidebar()" class="p-2 bg-white/5 rounded-lg text-white hover:bg-white/10 transition">
+                <button onclick="toggleSidebar()" class="p-2 bg-white/5 rounded-lg text-white hover:bg-white/10 transition cursor-pointer">
                     <i class="fas fa-bars"></i>
                 </button>
                 <div class="hidden md:block text-gray-400 text-sm">

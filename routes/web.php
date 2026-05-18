@@ -6,7 +6,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ExperienceController;
 use App\Http\Controllers\EducationController;
-use App\Http\Controllers\ProjectController; // 1. Impor Controller Project Baru
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\SkillController; // IMPOR CONTROLLER SKILL BARU
 
 // 1. Tampilan Utama (Landing Page)
 Route::get('/', [LandingPageController::class, 'index'])->name('home');
@@ -54,7 +55,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
         Route::delete('/education/{education}', [EducationController::class, 'destroy'])->name('destroy');
     });
 
-    // CRUD Projects (Penambahan Komponen Baru)
+    // CRUD Projects
     Route::name('projects.')->group(function () {
         Route::get('/projects', [ProjectController::class, 'index'])->name('index');
         Route::get('/projects/create', [ProjectController::class, 'create'])->name('create');
@@ -63,7 +64,16 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
         Route::get('/projects/{project}/edit', [ProjectController::class, 'edit'])->name('edit');
         Route::put('/projects/{project}', [ProjectController::class, 'update'])->name('update');
         Route::delete('/projects/{project}', [ProjectController::class, 'destroy'])->name('destroy');
-        // Rute khusus hapus satu file screenshot di form edit
         Route::delete('/projects/image/{image}', [ProjectController::class, 'destroyImage'])->name('destroyImage');
+    });
+
+    // UPDATE ROUTE: Tambahan Rute Grup untuk CRUD Skills
+    Route::name('skills.')->group(function () {
+        Route::get('/skills', [SkillController::class, 'index'])->name('index');
+        Route::get('/skills/create', [SkillController::class, 'create'])->name('create');
+        Route::post('/skills', [SkillController::class, 'store'])->name('store');
+        Route::get('/skills/{skill}/edit', [SkillController::class, 'edit'])->name('edit');
+        Route::put('/skills/{skill}', [SkillController::class, 'update'])->name('update');
+        Route::delete('/skills/{skill}', [SkillController::class, 'destroy'])->name('destroy');
     });
 });
