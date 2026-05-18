@@ -96,7 +96,7 @@
 
     <nav class="fixed top-0 w-full z-40 glass-nav">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 h-20 flex justify-between items-center">
-            <div class="text-xl font-black tracking-tighter text-slate-900 dark:text-white">
+            <div class="text-xl font-bold tracking-tighter text-slate-900 dark:text-white">
                 {{ strtoupper($profile->nama ?? 'HAMBALI FITRIANTO') }}<span class="text-accent">.</span>
             </div>
 
@@ -340,24 +340,44 @@
     <section id="skills" class="max-w-5xl mx-auto px-4 sm:px-6 py-24 border-t border-slate-200 dark:border-white/5">
         <div class="mb-16 text-center md:text-left">
             <h2 class="text-xs font-bold text-accent uppercase tracking-[0.3em] mb-4">Keahlian</h2>
-            <h3 class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white tracking-tight">Tech Stack & Infrastructure.</h3>
+            <h3 class="text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tight">Tech Stack & Infrastructure.</h3>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-            @forelse($skills as $skill)
-            <div class="card-gradient p-4 rounded-2xl flex items-center gap-3.5 bg-white/5 hover:scale-[1.02] hover:border-blue-500/20 transition-all duration-300 group/card">
-                <div class="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/5 group-hover/card:bg-blue-600 group-hover/card:text-white flex items-center justify-center text-accent text-lg transition duration-300 flex-shrink-0">
-                    <i class="{{ $skill->ikon ?? 'fas fa-laptop-code' }}"></i>
+        <div class="space-y-12">
+            @forelse($skills->groupBy('kategori') as $namaKategori => $daftarSkill)
+            <div class="space-y-4">
+                <div class="flex items-center gap-2 border-b border-slate-200/60 dark:border-white/5 pb-2">
+                    <div class="w-1.5 h-3.5 bg-blue-500 rounded-sm"></div>
+                    <h4 class="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-blue-400">
+                        {{ $namaKategori }}
+                    </h4>
                 </div>
-                <div class="overflow-hidden flex-1">
-                    <h5 class="text-sm font-bold text-slate-900 dark:text-white truncate" title="{{ $skill->nama_skill }}">{{ $skill->nama_skill }}</h5>
-                    <span class="text-[10px] text-slate-400 block truncate" title="{{ $skill->kategori }}">{{ $skill->kategori }}</span>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+                    @foreach($daftarSkill as $skill)
+                    <div class="p-5 rounded-2xl flex items-start gap-4 bg-white dark:bg-[#0c0c0e] border border-slate-200 dark:border-white/10 hover:scale-[1.02] hover:border-blue-500/40 hover:shadow-xl hover:shadow-blue-500/[0.02] transition-all duration-300 group/card">
+
+                        <div class="w-12 h-12 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5 group-hover/card:bg-blue-600 group-hover/card:text-white flex items-center justify-center text-blue-500 text-xl transition-all duration-300 flex-shrink-0 shadow-inner mt-0.5">
+                            <i class="{{ $skill->ikon ?? 'fas fa-laptop-code' }}"></i>
+                        </div>
+
+                        <div class="flex-1 min-w-0 space-y-0.5">
+                            <h5 class="text-base font-bold text-slate-900 dark:text-white tracking-tight leading-snug break-words">
+                                {{ $skill->nama_skill }}
+                            </h5>
+                            <span class="text-[10px] font-medium text-slate-400 dark:text-gray-500 block">
+                                Kompetensi: {{ $skill->tingkat }}
+                            </span>
+                        </div>
+                    </div>
+                    @endforeach
                 </div>
             </div>
             @empty
-            <div class="col-span-2 sm:col-span-3 md:col-span-4 py-12 text-center text-slate-400 dark:text-gray-600 border border-dashed border-white/5 rounded-2xl">
-                <i class="fas fa-laptop-code text-3xl mb-2 opacity-30"></i>
-                <p class="text-xs italic">Daftar keahlian belum ditambahkan di panel admin.</p>
+            <div class="py-16 text-center text-slate-400 dark:text-gray-600 border border-dashed border-slate-200 dark:border-white/5 rounded-3xl w-full">
+                <i class="fas fa-laptop-code text-4xl mb-3 block opacity-20"></i>
+                <p class="text-sm font-semibold">Daftar keahlian belum diisi.</p>
+                <p class="text-xs mt-1 opacity-70">Silakan input kompetensi andalan Anda lewat dashboard admin.</p>
             </div>
             @endforelse
         </div>
@@ -432,7 +452,6 @@
     </div>
 
     <script>
-        // HANDLING THEME (DARK / LIGHT)
         if (localStorage.getItem('theme') === 'light') {
             document.documentElement.classList.remove('dark');
             document.getElementById('theme-icon').className = 'fas fa-sun';
@@ -456,7 +475,6 @@
             }
         }
 
-        // CONTROL LOGIC JAVASCRIPT
         document.addEventListener('DOMContentLoaded', function() {
             const modal = document.getElementById('portfolioModal');
             const btnClose = document.getElementById('closePortfolioModal');
@@ -467,7 +485,6 @@
             const htmlElement = document.documentElement;
             const bodyElement = document.body;
 
-            // LOGIC UTK TOMBOL BACK TO TOP (DIPICU SCROLL SEJAUH 300px)
             window.addEventListener('scroll', function() {
                 if (window.scrollY > 300) {
                     backToTopBtn.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
@@ -485,7 +502,6 @@
                 });
             });
 
-            // MODAL DISPLAYER
             document.querySelectorAll('.btn-open-detail').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const name = this.getAttribute('data-name');
@@ -547,7 +563,6 @@
                         imgWrapper.classList.add('hidden');
                     }
 
-                    // Kunci scroll body di belakang modal
                     htmlElement.classList.add('overflow-hidden');
                     bodyElement.classList.add('overflow-hidden');
 
@@ -567,7 +582,6 @@
                     modal.classList.remove('flex');
                     modal.classList.add('hidden');
 
-                    // Kembalikan fungsi scroll normal halaman utama
                     htmlElement.classList.remove('overflow-hidden');
                     bodyElement.classList.remove('overflow-hidden');
                 }, 300);
