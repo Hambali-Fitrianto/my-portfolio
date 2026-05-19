@@ -385,10 +385,10 @@
 
     <footer class="border-t border-slate-200 dark:border-white/5 py-12 bg-slate-100 dark:bg-transparent">
         <div class="max-w-5xl mx-auto px-4 text-center">
-            <p class="text-xs font-bold uppercase tracking-[0.4em] text-slate-400 dark:text-gray-600 mb-3 italic">Build version 2.6</p>
+            <!-- <p class="text-xs font-bold uppercase tracking-[0.4em] text-slate-400 dark:text-gray-600 mb-3 italic">Build version 2.6</p> -->
             <h2 class="text-xl font-bold text-slate-900 dark:text-white tracking-tighter">{{ strtoupper($profile->nama ?? 'Hambali Fitrianto') }}</h2>
             <div class="mt-6 text-slate-400 dark:text-gray-600 text-[10px] tracking-widest uppercase">
-                &copy; {{ date('Y') }} Hak Cipta Dilindungi.
+                &copy; {{ date('Y') }} — All Rights Reserved.
             </div>
         </div>
     </footer>
