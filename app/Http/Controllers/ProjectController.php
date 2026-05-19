@@ -32,10 +32,16 @@ class ProjectController extends Controller
             'link_project' => 'nullable|url',
             'deskripsi'    => 'required|string',
             'fitur_kunci'  => 'nullable|string',
+
+            // Screenshots dibuat nullable total (boleh kosong)
+            'screenshots'   => 'nullable|array',
             'screenshots.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'accounts.*.role_akses' => 'required_with:accounts.*.username|string|max:255',
-            'accounts.*.username'   => 'required_with:accounts.*.role_akses|string|max:255',
-            'accounts.*.password'   => 'required_with:accounts.*.role_akses|string|max:255',
+
+            // Akun demo dibuat nullable total (boleh kosong)
+            'accounts'              => 'nullable|array',
+            'accounts.*.role_akses' => 'nullable|required_with:accounts.*.username,accounts.*.password|string|max:255',
+            'accounts.*.username'   => 'nullable|required_with:accounts.*.role_akses,accounts.*.password|string|max:255',
+            'accounts.*.password'   => 'nullable|required_with:accounts.*.role_akses,accounts.*.username|string|max:255',
         ]);
 
         DB::beginTransaction();
@@ -51,10 +57,10 @@ class ProjectController extends Controller
                 'fitur_kunci'  => $request->fitur_kunci,
             ]);
 
-            // 2. Handle Multiple Screenshots dengan metode bersih basename
+            // 2. Handle Multiple Screenshots (Hanya jalan jika ada file yang diupload)
             if ($request->hasFile('screenshots')) {
                 foreach ($request->file('screenshots') as $file) {
-                    if ($file->isValid()) {
+                    if ($file && $file->isValid()) {
                         $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
 
                         // Disimpan ke folder storage/app/public/projects
@@ -62,28 +68,29 @@ class ProjectController extends Controller
 
                         ProjectImage::create([
                             'project_id'  => $project->id,
-                            'path_gambar' => basename($pathFoto), // Menyimpan nama file bersih ke database
+                            'path_gambar' => basename($pathFoto),
                         ]);
                     }
                 }
             }
 
-            // 3. Handle Multiple Akun Demo
-            if ($request->has('accounts')) {
+            // 3. Handle Multiple Akun Demo (Hanya jalan jika array accounts diisi)
+            if ($request->has('accounts') && is_array($request->accounts)) {
                 foreach ($request->accounts as $account) {
-                    if (!empty($account['role_akses']) && !empty($account['username'])) {
+                    // Pastikan baris array tersebut benar-benar diisi, bukan inputan kosong
+                    if (!empty($account['role_akses']) && !empty($account['username']) && !empty($account['password'])) {
                         ProjectAccount::create([
                             'project_id' => $project->id,
                             'role_akses' => $account['role_akses'],
                             'username'   => $account['username'],
-                            'password'   => $account['password'],
+                            'password'   => $account['password'], // Catatan: Jika ingin aman, pertimbangkan menggunakan bcrypt() atau Hash::make()
                         ]);
                     }
                 }
             }
 
             DB::commit();
-            return redirect()->route('projects.index')->with('success', 'Project dan Kredensial berhasil disimpan!');
+            return redirect()->route('projects.index')->with('success', 'Project berhasil disimpan!');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withInput()->with('error', 'Gagal menyimpan data: ' . $e->getMessage());
@@ -111,10 +118,16 @@ class ProjectController extends Controller
             'link_project' => 'nullable|url',
             'deskripsi'    => 'required|string',
             'fitur_kunci'  => 'nullable|string',
+
+            // Screenshots dibuat nullable total
+            'screenshots'   => 'nullable|array',
             'screenshots.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'accounts.*.role_akses' => 'required_with:accounts.*.username|string|max:255',
-            'accounts.*.username'   => 'required_with:accounts.*.role_akses|string|max:255',
-            'accounts.*.password'   => 'required_with:accounts.*.role_akses|string|max:255',
+
+            // Akun demo dibuat nullable total
+            'accounts'              => 'nullable|array',
+            'accounts.*.role_akses' => 'nullable|required_with:accounts.*.username,accounts.*.password|string|max:255',
+            'accounts.*.username'   => 'nullable|required_with:accounts.*.role_akses,accounts.*.password|string|max:255',
+            'accounts.*.password'   => 'nullable|required_with:accounts.*.role_akses,accounts.*.username|string|max:255',
         ]);
 
         DB::beginTransaction();
@@ -133,7 +146,7 @@ class ProjectController extends Controller
             // 2. Jika ada upload screenshot baru
             if ($request->hasFile('screenshots')) {
                 foreach ($request->file('screenshots') as $file) {
-                    if ($file->isValid()) {
+                    if ($file && $file->isValid()) {
                         $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
                         $pathFoto = $file->storeAs('projects', $filename, 'public');
 
@@ -145,11 +158,12 @@ class ProjectController extends Controller
                 }
             }
 
-            // 3. Update Akun Demo
+            // 3. Update Akun Demo (Akan menghapus akun lama jika form dikosongkan total)
             ProjectAccount::where('project_id', $project->id)->delete();
-            if ($request->has('accounts')) {
+
+            if ($request->has('accounts') && is_array($request->accounts)) {
                 foreach ($request->accounts as $account) {
-                    if (!empty($account['role_akses']) && !empty($account['username'])) {
+                    if (!empty($account['role_akses']) && !empty($account['username']) && !empty($account['password'])) {
                         ProjectAccount::create([
                             'project_id' => $project->id,
                             'role_akses' => $account['role_akses'],
