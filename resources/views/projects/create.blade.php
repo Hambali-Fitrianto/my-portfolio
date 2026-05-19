@@ -26,6 +26,7 @@
     <form action="{{ route('projects.store') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
         @csrf
 
+        {{-- SECTION 1: DATA UTAMA APLIKASI --}}
         <div class="bg-[#111] border border-white/5 rounded-3xl p-8 shadow-2xl space-y-6">
             <h3 class="text-lg font-bold text-blue-500 uppercase tracking-wider border-b border-white/5 pb-2">1. Data Utama Aplikasi</h3>
 
@@ -63,21 +64,22 @@
                 <label class="text-xs font-bold uppercase tracking-widest text-gray-500 ml-1">Deskripsi Fungsionalitas Sistem</label>
                 <textarea name="deskripsi" rows="4" required
                     class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition"
-                    placeholder="Jelaskan alur sistem, latar belakang masalah, dan solusi otomatisasi yang dibangun..."></textarea>
+                    placeholder="Jelaskan alur sistem, latar belakang masalah, dan solusi otomatisasi yang dibangun...">{{ old('deskripsi') }}</textarea>
             </div>
 
             <div class="space-y-2">
                 <label class="text-xs font-bold uppercase tracking-widest text-gray-500 ml-1">Fitur Unggulan / Nilai Jual Teknis</label>
                 <textarea name="fitur_kunci" rows="3"
                     class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition"
-                    placeholder="Gunakan enter untuk poin baru...&#10;- Integrasi Cron-job via MaintainX API&#10;- HMAC Authentication Mekari API"></textarea>
+                    placeholder="Gunakan enter untuk poin baru...&#10;- Integrasi Cron-job via MaintainX API&#10;- HMAC Authentication Mekari API">{{ old('fitur_kunci') }}</textarea>
             </div>
 
+            {{-- SECTION: SCREENSHOTS (OPSIONAL) --}}
             <div class="space-y-4 pt-4 border-t border-white/5">
                 <div class="flex justify-between items-center">
                     <div>
-                        <label class="text-xs font-bold uppercase tracking-widest text-gray-500 ml-1">Aset Gambar / Screenshots Aplikasi</label>
-                        <p class="text-[10px] text-gray-600 italic ml-1 mt-0.5">*Maksimal 2 MB per file gambar.</p>
+                        <label class="text-xs font-bold uppercase tracking-widest text-gray-500 ml-1">Aset Gambar / Screenshots Aplikasi (Opsional)</label>
+                        <p class="text-[10px] text-gray-600 italic ml-1 mt-0.5">*Maksimal 2 MB per file gambar. Boleh dikosongkan.</p>
                     </div>
                     <button type="button" onclick="addImageField()" class="px-3 py-1.5 bg-blue-600/10 hover:bg-blue-600/20 text-blue-400 text-xs font-bold rounded-lg border border-blue-500/20 transition flex items-center gap-1.5">
                         <i class="fas fa-plus text-[10px]"></i> Tambah Gambar
@@ -89,7 +91,7 @@
                         <img id="preview-img-0" class="absolute inset-0 w-full h-full object-cover hidden z-10">
 
                         <div class="text-center space-y-1 text-gray-600 pointer-events-none group-hover:text-gray-400 transition z-0" id="placeholder-0">
-                            <i class="fas fa-cloud-upload-alt text-xl"></i>
+                            <i class="fas fa-cloud-upload-alt textxl"></i>
                             <span class="block text-[10px] font-bold uppercase tracking-wider">Pilih Foto</span>
                         </div>
 
@@ -104,15 +106,20 @@
             </div>
         </div>
 
+        {{-- SECTION 2: KREDENSIAL / AKUN DEMO (OPSIONAL) --}}
         <div class="bg-[#111] border border-white/5 rounded-3xl p-8 shadow-2xl space-y-6">
             <div class="flex justify-between items-center border-b border-white/5 pb-2">
-                <h3 class="text-lg font-bold text-yellow-500 uppercase tracking-wider">2. Kredensial / Akun Demo Sistem</h3>
+                <div>
+                    <h3 class="text-lg font-bold text-yellow-500 uppercase tracking-wider">2. Kredensial / Akun Demo Sistem (Opsional)</h3>
+                    <p class="text-[10px] text-gray-600 italic mt-0.5">Biarkan kosong jika aplikasi tidak memerlukan akun demo.</p>
+                </div>
                 <button type="button" onclick="addAccountRow()" class="px-4 py-2 bg-yellow-600/10 hover:bg-yellow-600/20 text-yellow-500 text-xs font-bold rounded-xl border border-yellow-500/20 transition flex items-center gap-2">
                     <i class="fas fa-plus"></i> Tambah Baris Akun
                 </button>
             </div>
 
             <div id="accounts-container" class="space-y-4">
+                {{-- Baris pertama dibuat tanpa pengetatan required agar langsung bisa dikosongkan --}}
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-white/[0.02] border border-white/5 p-4 rounded-2xl relative items-end group">
                     <div class="space-y-2">
                         <label class="text-[10px] font-bold uppercase tracking-widest text-gray-500">Role / Hak Akses</label>
@@ -127,6 +134,7 @@
                         <input type="text" name="accounts[0][password]" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500 transition" placeholder="admin123">
                     </div>
                     <div class="pb-1">
+                        {{-- Tombol hapus untuk baris pertama diaktifkan tanpa interupsi alert demi fleksibilitas --}}
                         <button type="button" onclick="removeAccountRow(this)" class="w-full py-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 text-xs font-bold rounded-xl border border-red-500/10 transition opacity-0 group-hover:opacity-100 duration-300">
                             <i class="fas fa-trash-alt mr-1"></i> Hapus Baris
                         </button>
@@ -169,7 +177,6 @@
     function addImageField() {
         const container = document.getElementById('image-preview-container');
 
-        // PERBAIKAN: Atribut required di bawah dihapus agar opsional sesuai backend
         const htmlField = `
             <div class="relative aspect-video rounded-xl border border-dashed border-white/10 bg-white/[0.01] hover:bg-white/[0.02] transition flex flex-col items-center justify-center p-2 group overflow-hidden" id="box-image-${imageIndex}">
                 <img id="preview-img-${imageIndex}" class="absolute inset-0 w-full h-full object-cover hidden z-10">
@@ -195,10 +202,17 @@
     // HAPUS KOTAK GAMBAR
     function removeImageField(index) {
         const container = document.getElementById('image-preview-container');
+        // Jika kotak gambar tinggal satu, reset isinya daripada memunculkan alert pengunci
         if (container.children.length > 1) {
             document.getElementById(`box-image-${index}`).remove();
         } else {
-            alert('Minimal harus ada 1 kotak unggahan screenshot, bos.');
+            const input = document.querySelector(`#box-image-${index} input[type="file"]`);
+            const preview = document.getElementById(`preview-img-${index}`);
+            const placeholder = document.getElementById(`placeholder-${index}`);
+
+            if (input) input.value = "";
+            if (preview) preview.classList.add('hidden');
+            if (placeholder) placeholder.classList.remove('hidden');
         }
     }
 
@@ -206,19 +220,20 @@
     function addAccountRow() {
         const container = document.getElementById('accounts-container');
 
+        // PERBAIKAN: Atribut 'required' pada template input string dinamis di bawah ini sudah dihapus total agar form bersifat opsional
         const htmlRow = `
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-white/[0.02] border border-white/5 p-4 rounded-2xl relative items-end group">
                 <div class="space-y-2">
                     <label class="text-[10px] font-bold uppercase tracking-widest text-gray-500">Role / Hak Akses</label>
-                    <input type="text" name="accounts[${accountIndex}][role_akses]" required class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500 transition" placeholder="Contoh: User, Operator">
+                    <input type="text" name="accounts[${accountIndex}][role_akses]" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500 transition" placeholder="Contoh: User, Operator">
                 </div>
                 <div class="space-y-2">
                     <label class="text-[10px] font-bold uppercase tracking-widest text-gray-500">Username / Email Demo</label>
-                    <input type="text" name="accounts[${accountIndex}][username]" required class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500 transition" placeholder="user / email">
+                    <input type="text" name="accounts[${accountIndex}][username]" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500 transition" placeholder="user / email">
                 </div>
                 <div class="space-y-2">
                     <label class="text-[10px] font-bold uppercase tracking-widest text-gray-500">Password Demo</label>
-                    <input type="text" name="accounts[${accountIndex}][password]" required class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500 transition" placeholder="password">
+                    <input type="text" name="accounts[${accountIndex}][password]" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500 transition" placeholder="password">
                 </div>
                 <div class="pb-1">
                     <button type="button" onclick="removeAccountRow(this)" class="w-full py-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 text-xs font-bold rounded-xl border border-red-500/10 transition group-hover:opacity-100 md:opacity-0 duration-300">
@@ -238,7 +253,9 @@
         if (container.children.length > 1) {
             button.closest('.grid').remove();
         } else {
-            alert('Minimal harus ada satu baris kredensial akun demo, bos.');
+            // Jika tinggal 1 baris, kosongkan seluruh input value di dalam baris tersebut tanpa memblokir form dengan alert
+            const inputs = button.closest('.grid').querySelectorAll('input');
+            inputs.forEach(input => input.value = '');
         }
     }
 </script>

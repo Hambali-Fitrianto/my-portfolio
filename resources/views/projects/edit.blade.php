@@ -27,6 +27,7 @@
         @csrf
         @method('PUT')
 
+        {{-- SECTION 1: DATA UTAMA APLIKASI --}}
         <div class="bg-[#111] border border-white/5 rounded-3xl p-8 shadow-2xl space-y-6">
             <h3 class="text-lg font-bold text-blue-500 uppercase tracking-wider border-b border-white/5 pb-2">1. Data Utama Aplikasi</h3>
 
@@ -68,6 +69,7 @@
                     class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition">{{ old('fitur_kunci', $project->fitur_kunci) }}</textarea>
             </div>
 
+            {{-- PREVIEW SCREENSHOT SEBELUMNYA --}}
             <div class="space-y-3 pt-4 border-t border-white/5">
                 <label class="text-xs font-bold uppercase tracking-widest text-gray-500 ml-1 block">Screenshots Saat Ini (Klik hapus untuk membuang berkas fisik)</label>
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -86,11 +88,12 @@
                 </div>
             </div>
 
+            {{-- UPLOADER SCREENSHOT BARU (OPSIONAL) --}}
             <div class="space-y-4 pt-4 border-t border-white/5">
                 <div class="flex justify-between items-center">
                     <div>
-                        <label class="text-xs font-bold uppercase tracking-widest text-gray-500 ml-1">Tambah Screenshots Baru</label>
-                        <p class="text-[10px] text-gray-600 italic ml-1 mt-0.5">*Maksimal 2 MB per file gambar baru.</p>
+                        <label class="text-xs font-bold uppercase tracking-widest text-gray-500 ml-1">Tambah Screenshots Baru (Opsional)</label>
+                        <p class="text-[10px] text-gray-600 italic ml-1 mt-0.5">*Maksimal 2 MB per file gambar baru. Boleh dikosongkan.</p>
                     </div>
                     <button type="button" onclick="addNewImageField()" class="px-3 py-1.5 bg-blue-600/10 hover:bg-blue-600/20 text-blue-400 text-xs font-bold rounded-lg border border-blue-500/20 transition flex items-center gap-1.5">
                         <i class="fas fa-plus text-[10px]"></i> Tambah Slot Gambar
@@ -102,28 +105,33 @@
             </div>
         </div>
 
+        {{-- SECTION 2: KREDENSIAL / AKUN DEMO (OPSIONAL) --}}
         <div class="bg-[#111] border border-white/5 rounded-3xl p-8 shadow-2xl space-y-6">
             <div class="flex justify-between items-center border-b border-white/5 pb-2">
-                <h3 class="text-lg font-bold text-yellow-500 uppercase tracking-wider">2. Kredensial / Akun Demo Sistem</h3>
+                <div>
+                    <h3 class="text-lg font-bold text-yellow-500 uppercase tracking-wider">2. Kredensial / Akun Demo Sistem (Opsional)</h3>
+                    <p class="text-[10px] text-gray-600 italic mt-0.5">Kosongkan semua baris atau hapus jika ingin meniadakan akun demo.</p>
+                </div>
                 <button type="button" onclick="addAccountRow()" class="px-4 py-2 bg-yellow-600/10 hover:bg-yellow-600/20 text-yellow-500 text-xs font-bold rounded-xl border border-yellow-500/20 transition flex items-center gap-2">
                     <i class="fas fa-plus"></i> Tambah Baris Akun
                 </button>
             </div>
 
             <div id="accounts-container" class="space-y-4">
+                {{-- Modifikasi: Atribut 'required' pada pemanggilan data lama di bawah ini dihapus total --}}
                 @forelse($project->accounts as $index => $account)
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-white/[0.02] border border-white/5 p-4 rounded-2xl relative items-end group">
                     <div class="space-y-2">
                         <label class="text-[10px] font-bold uppercase tracking-widest text-gray-500">Role / Hak Akses</label>
-                        <input type="text" name="accounts[{{ $index }}][role_akses]" value="{{ $account->role_akses }}" required class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500 transition">
+                        <input type="text" name="accounts[{{ $index }}][role_akses]" value="{{ $account->role_akses }}" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500 transition">
                     </div>
                     <div class="space-y-2">
                         <label class="text-[10px] font-bold uppercase tracking-widest text-gray-500">Username / Email Demo</label>
-                        <input type="text" name="accounts[{{ $index }}][username]" value="{{ $account->username }}" required class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500 transition">
+                        <input type="text" name="accounts[{{ $index }}][username]" value="{{ $account->username }}" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500 transition">
                     </div>
                     <div class="space-y-2">
                         <label class="text-[10px] font-bold uppercase tracking-widest text-gray-500">Password Demo</label>
-                        <input type="text" name="accounts[{{ $index }}][password]" value="{{ $account->password }}" required class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500 transition">
+                        <input type="text" name="accounts[{{ $index }}][password]" value="{{ $account->password }}" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500 transition">
                     </div>
                     <div class="pb-1">
                         <button type="button" onclick="removeAccountRow(this)" class="w-full py-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 text-xs font-bold rounded-xl border border-red-500/10 transition group-hover:opacity-100 md:opacity-0 duration-300">
@@ -196,7 +204,6 @@
     function addNewImageField() {
         const container = document.getElementById('image-preview-container');
 
-        // PERBAIKAN: Atribut required dihapus agar opsional dan tidak mengunci form saat di-submit
         const htmlField = `
             <div class="relative aspect-video rounded-xl border border-dashed border-white/10 bg-white/[0.01] hover:bg-white/[0.02] transition flex flex-col items-center justify-center p-2 group overflow-hidden" id="box-image-${imageIndex}">
                 <img id="preview-img-${imageIndex}" class="absolute inset-0 w-full h-full object-cover hidden z-10">
@@ -228,19 +235,20 @@
     function addAccountRow() {
         const container = document.getElementById('accounts-container');
 
+        // PERBAIKAN: Seluruh atribut 'required' di baris string HTML dinamis ini dihapus agar form dapat di-update dengan baris kosong
         const htmlRow = `
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-white/[0.02] border border-white/5 p-4 rounded-2xl relative items-end group">
                 <div class="space-y-2">
                     <label class="text-[10px] font-bold uppercase tracking-widest text-gray-500">Role / Hak Akses</label>
-                    <input type="text" name="accounts[${accountIndex}][role_akses]" required class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500 transition" placeholder="Contoh: Operator, Guest">
+                    <input type="text" name="accounts[${accountIndex}][role_akses]" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500 transition" placeholder="Contoh: Operator, Guest">
                 </div>
                 <div class="space-y-2">
                     <label class="text-[10px] font-bold uppercase tracking-widest text-gray-500">Username / Email Demo</label>
-                    <input type="text" name="accounts[${accountIndex}][username]" required class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500 transition" placeholder="username">
+                    <input type="text" name="accounts[${accountIndex}][username]" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500 transition" placeholder="username">
                 </div>
                 <div class="space-y-2">
                     <label class="text-[10px] font-bold uppercase tracking-widest text-gray-500">Password Demo</label>
-                    <input type="text" name="accounts[${accountIndex}][password]" required class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500 transition" placeholder="password">
+                    <input type="text" name="accounts[${accountIndex}][password]" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500 transition" placeholder="password">
                 </div>
                 <div class="pb-1">
                     <button type="button" onclick="removeAccountRow(this)" class="w-full py-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 text-xs font-bold rounded-xl border border-red-500/10 transition group-hover:opacity-100 md:opacity-0 duration-300">
@@ -260,7 +268,9 @@
         if (container.children.length > 1) {
             button.closest('.grid').remove();
         } else {
-            alert('Minimal harus tersisa satu baris kredensial demo, bos.');
+            // Jika tinggal 1 baris terakhir, kosongkan value text input-nya (bukan memunculkan pesan cekal alert)
+            const inputs = button.closest('.grid').querySelectorAll('input');
+            inputs.forEach(input => input.value = '');
         }
     }
 </script>
