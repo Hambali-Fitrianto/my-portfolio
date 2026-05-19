@@ -176,7 +176,7 @@
     <section id="education" class="max-w-5xl mx-auto px-4 sm:px-6 py-24 border-t border-slate-200 dark:border-white/5">
         <div class="mb-14 text-center md:text-left">
             <h2 class="text-xs font-bold text-accent uppercase tracking-[0.3em] mb-3">Edukasi</h2>
-            <h3 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">Latar Belakang Pendidikan.</h3>
+            <h3 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">Latar Belakang Pendidikan</h3>
         </div>
 
         <div class="grid grid-cols-1 gap-6">
@@ -223,7 +223,7 @@
     <section id="experience" class="max-w-5xl mx-auto px-4 sm:px-6 py-24 border-t border-slate-200 dark:border-white/5">
         <div class="mb-16 text-center md:text-left">
             <h2 class="text-xs font-bold text-accent uppercase tracking-[0.3em] mb-3">Riwayat Kerja</h2>
-            <h3 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">Pengalaman Profesional.</h3>
+            <h3 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">Pengalaman Profesional</h3>
         </div>
 
         <div class="space-y-12">
@@ -254,7 +254,7 @@
     <section id="projects" class="max-w-5xl mx-auto px-4 sm:px-6 py-24 border-t border-slate-200 dark:border-white/5">
         <div class="mb-16 text-center md:text-left">
             <h2 class="text-xs font-bold text-accent uppercase tracking-[0.3em] mb-4">Portofolio</h2>
-            <h3 class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white tracking-tight">Project Unggulan.</h3>
+            <h3 class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white tracking-tight">Project</h3>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -340,7 +340,7 @@
     <section id="skills" class="max-w-5xl mx-auto px-4 sm:px-6 py-24 border-t border-slate-200 dark:border-white/5">
         <div class="mb-16 text-center md:text-left">
             <h2 class="text-xs font-bold text-accent uppercase tracking-[0.3em] mb-4">Keahlian</h2>
-            <h3 class="text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tight">Tech Stack & Infrastructure.</h3>
+            <h3 class="text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tight">Tech Stack & Infrastructure</h3>
         </div>
 
         <div class="space-y-12">
