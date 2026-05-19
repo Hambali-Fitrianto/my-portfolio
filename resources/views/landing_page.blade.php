@@ -345,9 +345,9 @@
 
         <div class="space-y-12">
             @forelse($skills->groupBy('kategori') as $namaKategori => $daftarSkill)
-            <div class="space-y-4">
-                <div class="flex items-center gap-2 border-b border-slate-200/60 dark:border-white/5 pb-2">
-                    <div class="w-1.5 h-3.5 bg-blue-500 rounded-sm"></div>
+            <div class="space-y-5">
+                <div class="flex items-center gap-2.5 border-b border-slate-200/60 dark:border-white/5 pb-2.5">
+                    <div class="w-1.5 h-4 bg-blue-500 rounded-sm"></div>
                     <h4 class="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-blue-400">
                         {{ $namaKategori }}
                     </h4>
@@ -361,12 +361,12 @@
                             <i class="{{ $skill->ikon ?? 'fas fa-laptop-code' }}"></i>
                         </div>
 
-                        <div class="flex-1 min-w-0 space-y-0.5">
+                        <div class="flex-1 min-w-0 pt-0.5">
                             <h5 class="text-base font-bold text-slate-900 dark:text-white tracking-tight leading-snug break-words">
                                 {{ $skill->nama_skill }}
                             </h5>
-                            <span class="text-[10px] font-medium text-slate-400 dark:text-gray-500 block">
-                                Kompetensi: {{ $skill->tingkat }}
+                            <span class="text-[11px] font-medium text-slate-400 dark:text-gray-500 block mt-1">
+                                Tingkat: {{ $skill->tingkat }}
                             </span>
                         </div>
                     </div>
