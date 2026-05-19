@@ -124,7 +124,7 @@
         <div class="flex flex-col items-center text-center max-w-4xl mx-auto">
             <div class="mb-6 px-4 py-1.5 rounded-full border border-blue-500/20 bg-blue-500/5 text-blue-600 dark:text-blue-400 text-[10px] font-bold uppercase tracking-[0.2em] max-w-full truncate">
                 <span class="inline-block w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse mr-2"></span>
-                {{ $profile->sub_judul ?? 'Full-Stack Web Developer & System Integration' }}
+                {{ $profile->sub_judul ?? 'Full-Stack Developer | System Integration' }}
             </div>
 
             @if($profile && $profile->foto)
@@ -344,7 +344,24 @@
         </div>
 
         <div class="space-y-12">
-            @forelse($skills->groupBy('kategori') as $namaKategori => $daftarSkill)
+            @php
+            // Mengelompokkan skill bawaan dari database berdasarkan kolom kategori
+            $groupedSkills = $skills->groupBy('kategori');
+
+            // Menentukan susunan urutan prioritas kategori secara manual sesuai instruksi Anda
+            $urutanKategori = [
+            'Programming & Frameworks',
+            'Enterprise API & Databases',
+            'DevOps & Server Management',
+            'IT Infrastructure & Support'
+            ];
+            @endphp
+
+            @php $hasSkills = false; @endphp
+
+            @foreach($urutanKategori as $namaKategori)
+            @if(isset($groupedSkills[$namaKategori]) && $groupedSkills[$namaKategori]->count() > 0)
+            @php $hasSkills = true; @endphp
             <div class="space-y-5">
                 <div class="flex items-center gap-2.5 border-b border-slate-200/60 dark:border-white/5 pb-2.5">
                     <div class="w-1.5 h-4 bg-blue-500 rounded-sm"></div>
@@ -354,7 +371,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-                    @foreach($daftarSkill as $skill)
+                    @foreach($groupedSkills[$namaKategori] as $skill)
                     <div class="p-5 rounded-2xl flex items-start gap-4 bg-white dark:bg-[#0c0c0e] border border-slate-200 dark:border-white/10 hover:scale-[1.02] hover:border-blue-500/40 hover:shadow-xl hover:shadow-blue-500/[0.02] transition-all duration-300 group/card">
 
                         <div class="w-12 h-12 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5 group-hover/card:bg-blue-600 group-hover/card:text-white flex items-center justify-center text-blue-500 text-xl transition-all duration-300 flex-shrink-0 shadow-inner mt-0.5">
@@ -373,229 +390,231 @@
                     @endforeach
                 </div>
             </div>
-            @empty
+            @endif
+            @endforeach
+
+            @if(!$hasSkills)
             <div class="py-16 text-center text-slate-400 dark:text-gray-600 border border-dashed border-slate-200 dark:border-white/5 rounded-3xl w-full">
                 <i class="fas fa-laptop-code text-4xl mb-3 block opacity-20"></i>
                 <p class="text-sm font-semibold">Daftar keahlian belum diisi.</p>
                 <p class="text-xs mt-1 opacity-70">Silakan input kompetensi andalan Anda lewat dashboard admin.</p>
             </div>
-            @endforelse
+            @endif
         </div>
     </section>
 
     <footer class="border-t border-slate-200 dark:border-white/5 py-12 bg-slate-100 dark:bg-transparent">
         <div class="max-w-5xl mx-auto px-4 text-center">
-            <!-- <p class="text-xs font-bold uppercase tracking-[0.4em] text-slate-400 dark:text-gray-600 mb-3 italic">Build version 2.6</p> -->
             <h2 class="text-xl font-bold text-slate-900 dark:text-white tracking-tighter">{{ strtoupper($profile->nama ?? 'Hambali Fitrianto') }}</h2>
             <div class="mt-6 text-slate-400 dark:text-gray-600 text-[10px] tracking-widest uppercase">
                 &copy; {{ date('Y') }} - All Rights Reserved.
             </div>
         </div>
-    </footer>
+        </nav>
 
-    <button id="backToTopBtn" type="button"
-        class="fixed bottom-6 right-6 z-50 p-3.5 rounded-2xl bg-blue-600/90 text-white shadow-xl shadow-blue-500/20 hover:bg-blue-600 hover:scale-110 active:scale-95 transition-all duration-300 opacity-0 translate-y-4 pointer-events-none cursor-pointer backdrop-blur-sm border border-white/10 flex items-center justify-center"
-        title="Kembali ke Atas">
-        <i class="fas fa-chevron-up text-sm animate-bounce"></i>
-    </button>
+        <button id="backToTopBtn" type="button"
+            class="fixed bottom-6 right-6 z-50 p-3.5 rounded-2xl bg-blue-600/90 text-white shadow-xl shadow-blue-500/20 hover:bg-blue-600 hover:scale-110 active:scale-95 transition-all duration-300 opacity-0 translate-y-4 pointer-events-none cursor-pointer backdrop-blur-sm border border-white/10 flex items-center justify-center"
+            title="Kembali ke Atas">
+            <i class="fas fa-chevron-up text-sm animate-bounce"></i>
+        </button>
 
-    <div id="portfolioModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-sm opacity-0 transition-opacity duration-300">
-        <div class="bg-slate-50 dark:bg-[#0f0f11] border border-slate-200 dark:border-white/10 rounded-3xl max-w-4xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300">
-            <div class="px-6 py-4 border-b border-slate-200 dark:border-white/5 flex justify-between items-center bg-white/[0.01]">
-                <h3 id="modalProjectName" class="text-lg font-black text-slate-900 dark:text-white tracking-tight">Detail Project</h3>
-                <button type="button" id="closePortfolioModal" class="text-gray-400 hover:text-slate-900 dark:hover:text-white bg-slate-200/50 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 w-8 h-8 rounded-xl flex items-center justify-center transition cursor-pointer">
-                    <i class="fas fa-times text-xs"></i>
-                </button>
-            </div>
-
-            <div class="p-6 overflow-y-auto space-y-6 flex-1 text-sm text-slate-700 dark:text-gray-300 custom-scrollbar">
-                <div class="space-y-1.5">
-                    <h5 class="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Fungsionalitas Sistem</h5>
-                    <p id="modalProjectDesc" class="leading-relaxed text-slate-600 dark:text-gray-400 text-xs sm:text-sm whitespace-pre-line"></p>
+        <div id="portfolioModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-sm opacity-0 transition-opacity duration-300">
+            <div class="bg-slate-50 dark:bg-[#0f0f11] border border-slate-200 dark:border-white/10 rounded-3xl max-w-4xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300">
+                <div class="px-6 py-4 border-b border-slate-200 dark:border-white/5 flex justify-between items-center bg-white/[0.01]">
+                    <h3 id="modalProjectName" class="text-lg font-black text-slate-900 dark:text-white tracking-tight">Detail Project</h3>
+                    <button type="button" id="closePortfolioModal" class="text-gray-400 hover:text-slate-900 dark:hover:text-white bg-slate-200/50 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 w-8 h-8 rounded-xl flex items-center justify-center transition cursor-pointer">
+                        <i class="fas fa-times text-xs"></i>
+                    </button>
                 </div>
 
-                <div id="modalFeaturesWrapper" class="space-y-1.5">
-                    <h5 class="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Fitur Unggulan</h5>
-                    <div id="modalProjectFeatures" class="p-4 bg-slate-100 dark:bg-white/[0.02] border border-slate-200 dark:border-white/5 rounded-xl font-mono text-xs text-blue-600 dark:text-blue-400 whitespace-pre-line leading-relaxed"></div>
-                </div>
+                <div class="p-6 overflow-y-auto space-y-6 flex-1 text-sm text-slate-700 dark:text-gray-300 custom-scrollbar">
+                    <div class="space-y-1.5">
+                        <h5 class="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Fungsionalitas Sistem</h5>
+                        <p id="modalProjectDesc" class="leading-relaxed text-slate-600 dark:text-gray-400 text-xs sm:text-sm whitespace-pre-line"></p>
+                    </div>
 
-                <div id="modalAccountsWrapper" class="space-y-2">
-                    <h5 class="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Akses Akun Uji Coba</h5>
-                    <div class="overflow-x-auto border border-slate-200 dark:border-white/5 rounded-xl bg-white/50 dark:bg-white/[0.01]">
-                        <table class="w-full text-left text-xs min-w-[500px] sm:min-w-full">
-                            <thead class="bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-gray-400 uppercase font-bold text-[9px] tracking-wider border-b border-slate-200 dark:border-white/5">
-                                <tr>
-                                    <th class="px-4 py-3">Hak Akses / Role</th>
-                                    <th class="px-4 py-3">Username / Email</th>
-                                    <th class="px-4 py-3">Password</th>
-                                </tr>
-                            </thead>
-                            <tbody id="modalProjectAccounts" class="divide-y divide-slate-200 dark:divide-white/5 font-mono text-xs text-slate-700 dark:text-gray-300"></tbody>
-                        </table>
+                    <div id="modalFeaturesWrapper" class="space-y-1.5">
+                        <h5 class="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Fitur Unggulan</h5>
+                        <div id="modalProjectFeatures" class="p-4 bg-slate-100 dark:bg-white/[0.02] border border-slate-200 dark:border-white/5 rounded-xl font-mono text-xs text-blue-600 dark:text-blue-400 whitespace-pre-line leading-relaxed"></div>
+                    </div>
+
+                    <div id="modalAccountsWrapper" class="space-y-2">
+                        <h5 class="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Akses Akun Uji Coba</h5>
+                        <div class="overflow-x-auto border border-slate-200 dark:border-white/5 rounded-xl bg-white/50 dark:bg-white/[0.01]">
+                            <table class="w-full text-left text-xs min-w-[500px] sm:min-w-full">
+                                <thead class="bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-gray-400 uppercase font-bold text-[9px] tracking-wider border-b border-slate-200 dark:border-white/5">
+                                    <tr>
+                                        <th class="px-4 py-3">Hak Akses / Role</th>
+                                        <th class="px-4 py-3">Username / Email</th>
+                                        <th class="px-4 py-3">Password</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="modalProjectAccounts" class="divide-y divide-slate-200 dark:divide-white/5 font-mono text-xs text-slate-700 dark:text-gray-300"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="modalImagesWrapper" class="space-y-3">
+                        <h5 class="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Galeri Antarmuka Aplikasi</h5>
+                        <div id="modalProjectImages" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
                     </div>
                 </div>
 
-                <div id="modalImagesWrapper" class="space-y-3">
-                    <h5 class="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Galeri Antarmuka Aplikasi</h5>
-                    <div id="modalProjectImages" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+                <div id="modalActionFooter" class="px-6 py-4 border-t border-slate-200 dark:border-white/5 bg-slate-100 dark:bg-white/[0.01] flex justify-end items-center">
+                    <a id="modalDemoLink" href="#" target="_blank"
+                        class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs px-6 py-3 rounded-xl shadow-lg shadow-blue-500/20 transition group/modalBtn">
+                        <span>Eksplorasi Aplikasi Sekarang</span>
+                        <i class="fas fa-external-link-alt text-[10px] transform group-hover/modalBtn:scale-110 transition-transform"></i>
+                    </a>
                 </div>
             </div>
-
-            <div id="modalActionFooter" class="px-6 py-4 border-t border-slate-200 dark:border-white/5 bg-slate-100 dark:bg-white/[0.01] flex justify-end items-center">
-                <a id="modalDemoLink" href="#" target="_blank"
-                    class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs px-6 py-3 rounded-xl shadow-lg shadow-blue-500/20 transition group/modalBtn">
-                    <span>Eksplorasi Aplikasi Sekarang</span>
-                    <i class="fas fa-external-link-alt text-[10px] transform group-hover/modalBtn:scale-110 transition-transform"></i>
-                </a>
-            </div>
         </div>
-    </div>
 
-    <script>
-        if (localStorage.getItem('theme') === 'light') {
-            document.documentElement.classList.remove('dark');
-            document.getElementById('theme-icon').className = 'fas fa-sun';
-        } else {
-            document.documentElement.classList.add('dark');
-            document.getElementById('theme-icon').className = 'fas fa-moon';
-        }
-
-        function toggleTheme() {
-            const html = document.documentElement;
-            const icon = document.getElementById('theme-icon');
-
-            if (html.classList.contains('dark')) {
-                html.classList.remove('dark');
-                icon.className = 'fas fa-sun';
-                localStorage.setItem('theme', 'light');
+        <script>
+            if (localStorage.getItem('theme') === 'light') {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('theme-icon').className = 'fas fa-sun';
             } else {
-                html.classList.add('dark');
-                icon.className = 'fas fa-moon';
-                localStorage.setItem('theme', 'dark');
+                document.documentElement.classList.add('dark');
+                document.getElementById('theme-icon').className = 'fas fa-moon';
             }
-        }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const modal = document.getElementById('portfolioModal');
-            const btnClose = document.getElementById('closePortfolioModal');
-            const modalDemoLink = document.getElementById('modalDemoLink');
-            const modalActionFooter = document.getElementById('modalActionFooter');
-            const backToTopBtn = document.getElementById('backToTopBtn');
+            function toggleTheme() {
+                const html = document.documentElement;
+                const icon = document.getElementById('theme-icon');
 
-            const htmlElement = document.documentElement;
-            const bodyElement = document.body;
-
-            window.addEventListener('scroll', function() {
-                if (window.scrollY > 300) {
-                    backToTopBtn.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
-                    backToTopBtn.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto');
+                if (html.classList.contains('dark')) {
+                    html.classList.remove('dark');
+                    icon.className = 'fas fa-sun';
+                    localStorage.setItem('theme', 'light');
                 } else {
-                    backToTopBtn.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
-                    backToTopBtn.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+                    html.classList.add('dark');
+                    icon.className = 'fas fa-moon';
+                    localStorage.setItem('theme', 'dark');
                 }
-            });
+            }
 
-            backToTopBtn.addEventListener('click', function() {
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
+            document.addEventListener('DOMContentLoaded', function() {
+                const modal = document.getElementById('portfolioModal');
+                const btnClose = document.getElementById('closePortfolioModal');
+                const modalDemoLink = document.getElementById('modalDemoLink');
+                const modalActionFooter = document.getElementById('modalActionFooter');
+                const backToTopBtn = document.getElementById('backToTopBtn');
+
+                const htmlElement = document.documentElement;
+                const bodyElement = document.body;
+
+                window.addEventListener('scroll', function() {
+                    if (window.scrollY > 300) {
+                        backToTopBtn.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+                        backToTopBtn.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto');
+                    } else {
+                        backToTopBtn.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
+                        backToTopBtn.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+                    }
                 });
-            });
 
-            document.querySelectorAll('.btn-open-detail').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const name = this.getAttribute('data-name');
-                    const desc = this.getAttribute('data-desc');
-                    const features = this.getAttribute('data-features');
-                    const link = this.getAttribute('data-link');
-                    const accounts = JSON.parse(this.getAttribute('data-accounts'));
-                    const images = JSON.parse(this.getAttribute('data-images'));
+                backToTopBtn.addEventListener('click', function() {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                });
 
-                    document.getElementById('modalProjectName').innerText = name;
-                    document.getElementById('modalProjectDesc').innerText = desc;
+                document.querySelectorAll('.btn-open-detail').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const name = this.getAttribute('data-name');
+                        const desc = this.getAttribute('data-desc');
+                        const features = this.getAttribute('data-features');
+                        const link = this.getAttribute('data-link');
+                        const accounts = JSON.parse(this.getAttribute('data-accounts'));
+                        const images = JSON.parse(this.getAttribute('data-images'));
 
-                    if (link && link.trim() !== "") {
-                        modalActionFooter.classList.remove('hidden');
-                        modalDemoLink.setAttribute('href', link);
-                    } else {
-                        modalActionFooter.classList.add('hidden');
-                    }
+                        document.getElementById('modalProjectName').innerText = name;
+                        document.getElementById('modalProjectDesc').innerText = desc;
 
-                    const featWrapper = document.getElementById('modalFeaturesWrapper');
-                    if (features && features.trim() !== "") {
-                        featWrapper.classList.remove('hidden');
-                        document.getElementById('modalProjectFeatures').innerText = features;
-                    } else {
-                        featWrapper.classList.add('hidden');
-                    }
+                        if (link && link.trim() !== "") {
+                            modalActionFooter.classList.remove('hidden');
+                            modalDemoLink.setAttribute('href', link);
+                        } else {
+                            modalActionFooter.classList.add('hidden');
+                        }
 
-                    const accWrapper = document.getElementById('modalAccountsWrapper');
-                    const accTbody = document.getElementById('modalProjectAccounts');
-                    accTbody.innerHTML = '';
-                    if (accounts && accounts.length > 0) {
-                        accWrapper.classList.remove('hidden');
-                        accounts.forEach(acc => {
-                            const tr = document.createElement('tr');
-                            tr.className = 'border-b border-slate-200 dark:border-white/5 last:border-0';
-                            tr.innerHTML = `
+                        const featWrapper = document.getElementById('modalFeaturesWrapper');
+                        if (features && features.trim() !== "") {
+                            featWrapper.classList.remove('hidden');
+                            document.getElementById('modalProjectFeatures').innerText = features;
+                        } else {
+                            featWrapper.classList.add('hidden');
+                        }
+
+                        const accWrapper = document.getElementById('modalAccountsWrapper');
+                        const accTbody = document.getElementById('modalProjectAccounts');
+                        accTbody.innerHTML = '';
+                        if (accounts && accounts.length > 0) {
+                            accWrapper.classList.remove('hidden');
+                            accounts.forEach(acc => {
+                                const tr = document.createElement('tr');
+                                tr.className = 'border-b border-slate-200 dark:border-white/5 last:border-0';
+                                tr.innerHTML = `
                                 <td class="px-4 py-3 font-bold text-slate-900 dark:text-white">${acc.role_akses}</td>
                                 <td class="px-4 py-3 text-slate-600 dark:text-gray-300 select-all">${acc.username}</td>
                                 <td class="px-4 py-3 text-slate-600 dark:text-gray-300 select-all">${acc.password}</td>
                             `;
-                            accTbody.appendChild(tr);
-                        });
-                    } else {
-                        accWrapper.classList.add('hidden');
-                    }
+                                accTbody.appendChild(tr);
+                            });
+                        } else {
+                            accWrapper.classList.add('hidden');
+                        }
 
-                    const imgWrapper = document.getElementById('modalImagesWrapper');
-                    const imgContainer = document.getElementById('modalProjectImages');
-                    imgContainer.innerHTML = '';
-                    if (images && images.length > 0) {
-                        imgWrapper.classList.remove('hidden');
-                        images.forEach(src => {
-                            const item = document.createElement('div');
-                            item.className = 'relative aspect-video rounded-xl overflow-hidden border border-slate-200 dark:border-white/5 bg-black shadow-inner';
-                            item.innerHTML = `<img src="${src}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/600x400/222/555?text=Preview+Error'">`;
-                            imgContainer.appendChild(item);
-                        });
-                    } else {
-                        imgWrapper.classList.add('hidden');
-                    }
+                        const imgWrapper = document.getElementById('modalImagesWrapper');
+                        const imgContainer = document.getElementById('modalProjectImages');
+                        imgContainer.innerHTML = '';
+                        if (images && images.length > 0) {
+                            imgWrapper.classList.remove('hidden');
+                            images.forEach(src => {
+                                const item = document.createElement('div');
+                                item.className = 'relative aspect-video rounded-xl overflow-hidden border border-slate-200 dark:border-white/5 bg-black shadow-inner';
+                                item.innerHTML = `<img src="${src}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/600x400/222/555?text=Preview+Error'">`;
+                                imgContainer.appendChild(item);
+                            });
+                        } else {
+                            imgWrapper.classList.add('hidden');
+                        }
 
-                    htmlElement.classList.add('overflow-hidden');
-                    bodyElement.classList.add('overflow-hidden');
+                        htmlElement.classList.add('overflow-hidden');
+                        bodyElement.classList.add('overflow-hidden');
 
-                    modal.classList.remove('hidden');
-                    modal.classList.add('flex');
+                        modal.classList.remove('hidden');
+                        modal.classList.add('flex');
+                        setTimeout(() => {
+                            modal.classList.remove('opacity-0');
+                            modal.querySelector('.transform').classList.remove('scale-95');
+                        }, 10);
+                    });
+                });
+
+                function closeModal() {
+                    modal.classList.add('opacity-0');
+                    modal.querySelector('.transform').classList.add('scale-95');
                     setTimeout(() => {
-                        modal.classList.remove('opacity-0');
-                        modal.querySelector('.transform').classList.remove('scale-95');
-                    }, 10);
+                        modal.classList.remove('flex');
+                        modal.classList.add('hidden');
+
+                        htmlElement.classList.remove('overflow-hidden');
+                        bodyElement.classList.remove('overflow-hidden');
+                    }, 300);
+                }
+
+                btnClose.addEventListener('click', closeModal);
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) closeModal();
+                });
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal();
                 });
             });
-
-            function closeModal() {
-                modal.classList.add('opacity-0');
-                modal.querySelector('.transform').classList.add('scale-95');
-                setTimeout(() => {
-                    modal.classList.remove('flex');
-                    modal.classList.add('hidden');
-
-                    htmlElement.classList.remove('overflow-hidden');
-                    bodyElement.classList.remove('overflow-hidden');
-                }, 300);
-            }
-
-            btnClose.addEventListener('click', closeModal);
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) closeModal();
-            });
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal();
-            });
-        });
-    </script>
+        </script>
 </body>
 
 </html>
