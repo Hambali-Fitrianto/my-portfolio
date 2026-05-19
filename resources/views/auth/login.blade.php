@@ -115,7 +115,7 @@
 
         <!-- Footer -->
         <p class="text-center mt-8 text-gray-600 text-xs tracking-widest uppercase">
-            &copy; {{ date('Y') }} Protected System
+            &copy; {{ date('Y') }} - All Rights Reserved
         </p>
     </div>
 
