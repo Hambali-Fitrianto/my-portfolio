@@ -388,7 +388,7 @@
             <!-- <p class="text-xs font-bold uppercase tracking-[0.4em] text-slate-400 dark:text-gray-600 mb-3 italic">Build version 2.6</p> -->
             <h2 class="text-xl font-bold text-slate-900 dark:text-white tracking-tighter">{{ strtoupper($profile->nama ?? 'Hambali Fitrianto') }}</h2>
             <div class="mt-6 text-slate-400 dark:text-gray-600 text-[10px] tracking-widest uppercase">
-                &copy; {{ date('Y') }} — All Rights Reserved.
+                &copy; {{ date('Y') }} - All Rights Reserved.
             </div>
         </div>
     </footer>
