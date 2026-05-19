@@ -64,29 +64,34 @@
                     </div>
                     <span class="font-black text-xl text-white tracking-tighter uppercase">Admin<span class="text-blue-500">.</span></span>
                 </div>
-                <button onclick="toggleSidebar()" class="md:hidden text-gray-500">
+                <button onclick="toggleSidebar()" class="md:hidden text-gray-500 cursor-pointer">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
 
             <nav class="space-y-2">
                 <p class="px-4 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-600 mb-4">Menu Utama</p>
+
                 <a href="{{ route('profile.index') }}" class="nav-link flex items-center gap-3 px-4 py-3 {{ request()->routeIs('profile.*') ? 'active' : '' }}">
                     <i class="fas fa-user-circle w-5"></i>
                     <span class="text-sm font-semibold">Manajemen Profil</span>
                 </a>
+
                 <a href="{{ route('education.index') }}" class="nav-link flex items-center gap-3 px-4 py-3 {{ request()->routeIs('education.*') ? 'active' : '' }}">
                     <i class="fas fa-graduation-cap w-5"></i>
                     <span class="text-sm font-semibold">Education</span>
                 </a>
+
                 <a href="{{ route('experience.index') }}" class="nav-link flex items-center gap-3 px-4 py-3 {{ request()->routeIs('experience.*') ? 'active' : '' }}">
                     <i class="fas fa-briefcase w-5"></i>
                     <span class="text-sm font-semibold">Experience</span>
                 </a>
+
                 <a href="{{ route('projects.index') }}" class="nav-link flex items-center gap-3 px-4 py-3 {{ request()->routeIs('projects.*') ? 'active' : '' }}">
                     <i class="fas fa-project-diagram w-5"></i>
                     <span class="text-sm font-semibold">Projects</span>
                 </a>
+
                 <a href="{{ route('skills.index') }}" class="nav-link flex items-center gap-3 px-4 py-3 {{ request()->routeIs('skills.*') ? 'active' : '' }}">
                     <i class="fas fa-laptop-code w-5"></i>
                     <span class="text-sm font-semibold">Skills</span>
@@ -136,6 +141,18 @@
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.toggle('sidebar-closed');
         }
+
+        // Otomatis menutup sidebar di mobile device setelah klik link menu
+        document.addEventListener('DOMContentLoaded', function() {
+            const links = document.querySelectorAll('.nav-link');
+            links.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth < 768) {
+                        toggleSidebar();
+                    }
+                });
+            });
+        });
     </script>
 </body>
 
