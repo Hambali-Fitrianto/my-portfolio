@@ -18,7 +18,7 @@ class LandingPageController extends Controller
         $profile = Profile::first();
 
         // Urutkan murni berdasarkan ID terbaru dari database
-        $experiences = Experience::orderBy('id', 'asc')->get();
+        $experiences = Experience::orderBy('id', 'desc')->get();
         $educations = Education::orderBy('id', 'desc')->get();
 
         // Ambil data project beserta relasi image & account dari database
