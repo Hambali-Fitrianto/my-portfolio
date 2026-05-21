@@ -581,11 +581,13 @@
                     const desc = this.getAttribute('data-desc');
                     const features = this.getAttribute('data-features');
                     const link = this.getAttribute('data-link');
-                    const accounts = JSON.parse(this.getAttribute('data-accounts'));
-                    const images = JSON.parse(this.getAttribute('data-images'));
+                    
+                    // Ditambahkan fallback string kosong '[]' agar tidak memicu uncaught syntax error jika data bernilai null
+                    const accounts = JSON.parse(this.getAttribute('data-accounts') || '[]');
+                    const images = JSON.parse(this.getAttribute('data-images') || '[]');
 
                     document.getElementById('modalProjectName').innerText = name;
-                    document.getElementById('modalProjectDesc').innerText = desc;
+                    document.getElementById('modalProjectDesc').innerText = desc || 'Tidak ada deskripsi.';
 
                     if (link && link.trim() !== "") {
                         modalActionFooter.classList.remove('hidden');
@@ -609,11 +611,12 @@
                         accWrapper.classList.remove('hidden');
                         accounts.forEach(acc => {
                             const tr = document.createElement('tr');
-                            tr.className = 'border-b border-slate-200 dark:border-white/5 last:border-0';
+                            tr.className = 'border-b border-slate-200 dark:border-white/5 last:border-0 hover:bg-slate-50 dark:hover:bg-white/[0.02]';
+                            // Penyesuaian nama properti objek agar sinkron dengan template HTML sebelumnya (acc.role & acc.username/email)
                             tr.innerHTML = `
-                                <td class="px-4 py-3 font-bold text-slate-900 dark:text-white">${acc.role_akses}</td>
-                                <td class="px-4 py-3 text-slate-600 dark:text-gray-300 select-all">${acc.username}</td>
-                                <td class="px-4 py-3 text-slate-600 dark:text-gray-300 select-all">${acc.password}</td>
+                                <td class="px-4 py-3 font-bold text-slate-900 dark:text-white">${acc.role ?? acc.role_akses ?? '-'}</td>
+                                <td class="px-4 py-3 text-blue-600 dark:text-blue-400 select-all">${acc.username ?? acc.email ?? '-'}</td>
+                                <td class="px-4 py-3 text-slate-600 dark:text-gray-300 select-all">${acc.password ?? '-'}</td>
                             `;
                             accTbody.appendChild(tr);
                         });
@@ -629,7 +632,7 @@
                         images.forEach(src => {
                             const item = document.createElement('div');
                             item.className = 'relative aspect-video rounded-xl overflow-hidden border border-slate-200 dark:border-white/5 bg-black shadow-inner';
-                            item.innerHTML = `<img src="${src}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/600x400/222/555?text=Preview+Error'">`;
+                            item.innerHTML = `<img src="${src}" class="w-full h-full object-cover hover:scale-105 transition duration-300" onerror="this.src='https://placehold.co/600x400/222/555?text=Preview+Error'">`;
                             imgContainer.appendChild(item);
                         });
                     } else {
@@ -644,12 +647,14 @@
                     setTimeout(() => {
                         modal.classList.remove('opacity-0');
                         modal.querySelector('.transform').classList.remove('scale-95');
+                        modal.querySelector('.transform').classList.add('scale-100');
                     }, 10);
                 });
             });
 
             function closeModal() {
                 modal.classList.add('opacity-0');
+                modal.querySelector('.transform').classList.remove('scale-100');
                 modal.querySelector('.transform').classList.add('scale-95');
                 setTimeout(() => {
                     modal.classList.remove('flex');
