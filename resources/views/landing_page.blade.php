@@ -87,6 +87,13 @@
         html:not(.dark) .custom-scrollbar::-webkit-scrollbar-thumb {
             background: rgba(0, 0, 0, 0.1);
         }
+
+        /* Perbaikan Tengah Sempurna */
+        .modal-active {
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
 </head>
 
@@ -144,10 +151,15 @@
             </div>
 
             @if($profile && $profile->foto)
-            <div class="mb-8 relative">
+            <div class="mb-8 relative group">
                 <div class="absolute inset-0 bg-blue-500 blur-3xl opacity-10 rounded-full"></div>
-                <img src="{{ asset('storage/profile/' . $profile->foto) }}"
-                    class="relative w-28 h-28 md:w-36 md:h-36 rounded-full object-cover border border-slate-300/60 dark:border-white/10 p-1 bg-white/5 shadow-xl">
+                <button type="button" onclick="openLightboxModal('{{ asset('storage/profile/' . $profile->foto) }}')" 
+                    class="relative w-28 h-28 md:w-36 md:h-36 rounded-full border border-slate-300/60 dark:border-white/10 p-1 bg-white/5 shadow-xl overflow-hidden cursor-pointer hover:scale-105 transition-all duration-300 block z-10">
+                    <img src="{{ asset('storage/profile/' . $profile->foto) }}" class="w-full h-full rounded-full object-cover">
+                    <div class="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300">
+                        <i class="fas fa-search-plus text-white text-base md:text-lg"></i>
+                    </div>
+                </button>
             </div>
             @endif
 
@@ -189,84 +201,6 @@
         </div>
     </section>
 
-    <section id="education" class="max-w-5xl mx-auto px-4 sm:px-6 py-24 border-t border-slate-200 dark:border-white/5">
-        <div class="mb-14 text-center md:text-left">
-            <h2 class="text-xs font-bold text-accent uppercase tracking-[0.3em] mb-3">Edukasi</h2>
-            <h3 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">Latar Belakang Pendidikan</h3>
-        </div>
-
-        <div class="grid grid-cols-1 gap-6">
-            @forelse($educations as $edu)
-            <div class="card-gradient p-6 sm:p-8 rounded-3xl flex flex-col justify-between w-full">
-                <div>
-                    <div class="flex flex-col sm:flex-row justify-between items-start gap-2 sm:gap-4 mb-4">
-                        <div>
-                            <h4 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">{{ $edu->institusi }}</h4>
-                            <p class="text-xs sm:text-sm text-slate-500 dark:text-gray-400 mt-0.5">{{ $edu->alamat }}</p>
-                        </div>
-                        <span class="text-[10px] font-bold px-3 py-1 bg-slate-200/50 dark:bg-white/5 border border-slate-300/30 dark:border-white/10 rounded-full text-slate-600 dark:text-gray-400 whitespace-nowrap self-start sm:self-auto">
-                            {{ $edu->periode }}
-                        </span>
-                    </div>
-
-                    <p class="text-sm sm:text-base font-bold text-accent mb-4">{{ $edu->gelar }}</p>
-
-                    @if($edu->tugas_akhir)
-                    <div class="mb-6 p-4 bg-slate-100 dark:bg-white/[0.02] border border-slate-200 dark:border-white/5 rounded-xl">
-                        <span class="text-[9px] font-black text-accent uppercase tracking-wider block mb-1">Tugas Akhir / Skripsi:</span>
-                        <p class="text-xs sm:text-sm text-slate-600 dark:text-gray-400 italic">"{{ $edu->tugas_akhir }}"</p>
-                    </div>
-                    @endif
-
-                    <div class="text-xs sm:text-sm text-slate-500 dark:text-gray-400 leading-relaxed space-y-1">
-                        {!! nl2br(e($edu->deskripsi)) !!}
-                    </div>
-                </div>
-
-                @if($edu->gpa)
-                <div class="mt-6 pt-4 border-t border-slate-200 dark:border-white/5 flex justify-between items-center">
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Prestasi Akademik</span>
-                    <span class="text-xs font-black text-green-600 dark:text-green-400 bg-green-500/10 px-2.5 py-1 rounded-lg">IPK {{ $edu->gpa }}</span>
-                </div>
-                @endif
-            </div>
-            @empty
-            <p class="text-center text-sm text-gray-500 italic w-full">Belum ada data riwayat pendidikan.</p>
-            @endforelse
-        </div>
-    </section>
-
-    <section id="experience" class="max-w-5xl mx-auto px-4 sm:px-6 py-24 border-t border-slate-200 dark:border-white/5">
-        <div class="mb-16 text-center md:text-left">
-            <h2 class="text-xs font-bold text-accent uppercase tracking-[0.3em] mb-3">Riwayat Kerja</h2>
-            <h3 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">Pengalaman Profesional</h3>
-        </div>
-
-        <div class="space-y-12">
-            @forelse($experiences as $exp)
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 pt-8 border-t border-slate-200/60 dark:border-white/5 first:border-t-0 first:pt-0">
-                <div class="space-y-1">
-                    <span class="text-xs font-bold text-slate-400 dark:text-gray-500 font-mono block">{{ $exp->periode }}</span>
-                    <h4 class="text-xl font-black text-slate-900 dark:text-white tracking-tight leading-snug">{{ $exp->posisi }}</h4>
-                    <p class="text-sm font-bold text-accent">{{ $exp->perusahaan }}</p>
-                    <p class="text-xs text-slate-400 italic dark:text-gray-500">{{ $exp->alamat }}</p>
-                </div>
-
-                <div class="md:col-span-2">
-                    <div class="card-gradient p-5 sm:p-6 rounded-2xl text-sm leading-relaxed text-slate-600 dark:text-gray-400 w-full">
-                        <p class="text-[10px] font-bold text-slate-400 dark:text-gray-500 uppercase tracking-widest mb-3">Tanggung Jawab Teknis:</p>
-                        <div class="space-y-2 break-words">
-                            {!! nl2br(e($exp->deskripsi)) !!}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            @empty
-            <p class="text-center text-sm text-gray-500 italic w-full">Belum ada data pengalaman kerja.</p>
-            @endforelse
-        </div>
-    </section>
-
     <section id="projects" class="max-w-5xl mx-auto px-4 sm:px-6 py-24 border-t border-slate-200 dark:border-white/5">
         <div class="mb-16 text-center md:text-left">
             <h2 class="text-xs font-bold text-accent uppercase tracking-[0.3em] mb-4">Portofolio</h2>
@@ -275,13 +209,19 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse($projects as $project)
-            <div class="card-gradient rounded-3xl overflow-hidden flex flex-col justify-between group bg-white/5 shadow-lg hover:shadow-xl transition-all duration-300 w-full">
+            <div class="card-gradient rounded-3xl overflow-hidden flex flex-col justify-between group bg-white/5 shadow-lg hover:shadow-xl transition-all duration-300 w-full relative">
                 <div>
-                    <div class="relative aspect-video w-full overflow-hidden bg-black/50 border-b border-slate-200/10 dark:border-white/5">
+                    <div class="relative aspect-video w-full overflow-hidden bg-black/50 border-b border-slate-200/10 dark:border-white/5 group/imgContainer">
                         @if($project->images->count() > 0)
-                        <img src="{{ asset('storage/projects/' . $project->images->first()->path_gambar) }}"
-                            alt="{{ $project->nama_project }}"
-                            class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <button type="button" onclick="openLightboxModal('{{ asset('storage/projects/' . $project->images->first()->path_gambar) }}')" 
+                            class="w-full h-full block cursor-pointer overflow-hidden relative z-10">
+                            <img src="{{ asset('storage/projects/' . $project->images->first()->path_gambar) }}"
+                                alt="{{ $project->nama_project }}"
+                                class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover/imgContainer:opacity-100 flex items-center justify-center transition-opacity duration-300">
+                                <i class="fas fa-search-plus text-white text-lg"></i>
+                            </div>
+                        </button>
                         @else
                         <div class="w-full h-full flex flex-col items-center justify-center text-slate-400 dark:text-slate-500">
                             <i class="fas fa-code text-3xl mb-2 opacity-40"></i>
@@ -290,7 +230,7 @@
                         @endif
 
                         @if($project->tipe_project)
-                        <span class="absolute top-3 left-3 bg-blue-600 text-white text-[9px] font-black uppercase px-2.5 py-1 rounded-md tracking-wider shadow-md">
+                        <span class="absolute top-3 left-3 bg-blue-600 text-white text-[9px] font-black uppercase px-2.5 py-1 rounded-md tracking-wider shadow-md pointer-events-none z-20">
                             {{ $project->tipe_project }}
                         </span>
                         @endif
@@ -317,7 +257,7 @@
 
                     <div class="grid grid-cols-2 gap-3 pt-3 border-t border-slate-200 dark:border-white/5">
                         <button type="button"
-                            class="btn-open-detail w-full text-center py-2.5 px-3 bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-900 dark:text-white text-xs font-bold rounded-xl border border-slate-300/50 dark:border-white/10 transition flex items-center justify-center gap-1.5 cursor-pointer"
+                            class="btn-open-detail w-full text-center py-2.5 px-3 bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-900 dark:text-white text-xs font-bold rounded-xl border border-slate-300/50 dark:border-white/10 transition flex items-center justify-center gap-1.5 cursor-pointer relative z-30"
                             data-name="{{ $project->nama_project }}"
                             data-desc="{{ $project->deskripsi }}"
                             data-features="{{ $project->fitur_kunci }}"
@@ -329,15 +269,13 @@
 
                         @if($project->link_project)
                         <a href="{{ $project->link_project }}" target="_blank"
-                            class="w-full text-center py-2.5 px-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold rounded-xl transition flex items-center justify-center gap-1.5 shadow-md shadow-blue-500/20 group/btn"
-                            title="Buka dan Eksplorasi Aplikasi">
+                            class="w-full text-center py-2.5 px-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold rounded-xl transition flex items-center justify-center gap-1.5 shadow-md shadow-blue-500/20 group/btn relative z-30">
                             <span>Live</span>
                             <i class="fas fa-arrow-right text-[9px] transform group-hover/btn:translate-x-0.5 transition-transform"></i>
                         </a>
                         @else
                         <button type="button" disabled
-                            class="w-full py-2.5 px-3 bg-slate-200 dark:bg-white/[0.02] text-slate-400 dark:text-gray-600 text-xs font-bold rounded-xl border border-dashed border-slate-300 dark:border-white/5 cursor-not-allowed flex items-center justify-center gap-1"
-                            title="Aplikasi berjalan di server lokal / internal">
+                            class="w-full py-2.5 px-3 bg-slate-200 dark:bg-white/[0.02] text-slate-400 dark:text-gray-600 text-xs font-bold rounded-xl border border-dashed border-slate-300 dark:border-white/5 cursor-not-allowed flex items-center justify-center gap-1 relative z-30">
                             <i class="fas fa-desktop text-[10px] opacity-50"></i> Internal
                         </button>
                         @endif
@@ -353,66 +291,66 @@
         </div>
     </section>
 
-    <section id="skills" class="max-w-5xl mx-auto px-4 sm:px-6 py-24 border-t border-slate-200 dark:border-white/5">
-        <div class="mb-16 text-center md:text-left">
-            <h2 class="text-xs font-bold text-accent uppercase tracking-[0.3em] mb-4">Keahlian</h2>
-            <h3 class="text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tight">Tech Stack & Infrastructure</h3>
-        </div>
+    <div id="portfolioModal" class="fixed inset-0 z-50 hidden p-2 sm:p-4 bg-black/80 backdrop-blur-md opacity-0 transition-opacity duration-300 overflow-y-auto custom-scrollbar">
+        <div class="m-auto bg-slate-50 dark:bg-[#0f0f11] border border-slate-200 dark:border-white/10 rounded-3xl max-w-4xl w-full flex flex-col shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300">
+            <div class="px-6 py-4 border-b border-slate-200 dark:border-white/5 flex justify-between items-center sticky top-0 bg-slate-50 dark:bg-[#0f0f11] z-50">
+                <h3 id="modalProjectName" class="text-lg font-black text-slate-900 dark:text-white tracking-tight">Detail Project</h3>
+                <button type="button" id="closePortfolioModal" class="text-gray-400 hover:text-slate-900 dark:hover:text-white bg-slate-200/50 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 w-8 h-8 rounded-xl flex items-center justify-center transition cursor-pointer">
+                    <i class="fas fa-times text-xs"></i>
+                </button>
+            </div>
 
-        <div class="space-y-12">
-            @php
-            $groupedSkills = $skills->groupBy('kategori');
-            $urutanKategori = [
-            'Programming & Frameworks',
-            'Enterprise API & Databases',
-            'DevOps & Server Management',
-            'IT Infrastructure & Support'
-            ];
-            $hasSkills = false;
-            @endphp
-
-            @foreach($urutanKategori as $namaKategori)
-            @if(isset($groupedSkills[$namaKategori]) && $groupedSkills[$namaKategori]->count() > 0)
-            @php $hasSkills = true; @endphp
-            <div class="space-y-5">
-                <div class="flex items-center gap-2.5 border-b border-slate-200/60 dark:border-white/5 pb-2.5">
-                    <div class="w-1.5 h-4 bg-blue-500 rounded-sm"></div>
-                    <h4 class="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-blue-400">
-                        {{ $namaKategori }}
-                    </h4>
+            <div class="p-6 space-y-8 text-sm text-slate-700 dark:text-gray-300">
+                <div class="space-y-2">
+                    <h5 class="text-[10px] font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">Fungsionalitas Sistem</h5>
+                    <p id="modalProjectDesc" class="leading-relaxed text-slate-600 dark:text-gray-400 text-xs sm:text-sm whitespace-pre-line"></p>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-                    @foreach($groupedSkills[$namaKategori] as $skill)
-                    <div class="p-5 rounded-2xl flex items-start gap-4 bg-white dark:bg-[#0c0c0e] border border-slate-200 dark:border-white/10 hover:scale-[1.02] hover:border-blue-500/40 hover:shadow-xl hover:shadow-blue-500/[0.02] transition-all duration-300 group/card w-full">
-                        <div class="w-12 h-12 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5 group-hover/card:bg-blue-600 group-hover/card:text-white flex items-center justify-center text-blue-500 text-xl transition-all duration-300 flex-shrink-0 shadow-inner mt-0.5">
-                            <i class="{{ $skill->ikon ?? 'fas fa-laptop-code' }}"></i>
-                        </div>
+                <div id="modalFeaturesWrapper" class="space-y-2">
+                    <h5 class="text-[10px] font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">Fitur Unggulan</h5>
+                    <div id="modalProjectFeatures" class="p-4 bg-slate-100 dark:bg-white/[0.03] border border-slate-200 dark:border-white/5 rounded-xl text-xs leading-relaxed"></div>
+                </div>
 
-                        <div class="flex-1 min-w-0 pt-0.5">
-                            <h5 class="text-base font-bold text-slate-900 dark:text-white tracking-tight leading-snug break-words">
-                                {{ $skill->nama_skill }}
-                            </h5>
-                            <span class="text-[11px] font-medium text-slate-400 dark:text-gray-500 block mt-1">
-                                Tingkat: {{ $skill->tingkat }}
-                            </span>
-                        </div>
+                <div id="modalAccountsWrapper" class="space-y-3">
+                    <h5 class="text-[10px] font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">Akses Akun Uji Coba</h5>
+                    <div class="overflow-x-auto border border-slate-200 dark:border-white/5 rounded-xl bg-white/50 dark:bg-white/[0.01] custom-scrollbar">
+                        <table class="w-full text-left text-xs min-w-[450px]">
+                            <thead class="bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-gray-400 uppercase font-bold text-[9px] tracking-wider border-b border-slate-200 dark:border-white/5">
+                                <tr>
+                                    <th class="px-4 py-3">Role</th>
+                                    <th class="px-4 py-3">Username</th>
+                                    <th class="px-4 py-3">Password</th>
+                                </tr>
+                            </thead>
+                            <tbody id="modalProjectAccounts" class="divide-y divide-slate-200 dark:divide-white/5 text-xs text-slate-700 dark:text-gray-300"></tbody>
+                        </table>
                     </div>
-                    @endforeach
+                </div>
+
+                <div id="modalImagesWrapper" class="space-y-3">
+                    <h5 class="text-[10px] font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">Galeri Antarmuka</h5>
+                    <div id="modalProjectImages" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
                 </div>
             </div>
-            @endif
-            @endforeach
 
-            @if(!$hasSkills)
-            <div class="py-16 text-center text-slate-400 dark:text-gray-600 border border-dashed border-slate-200 dark:border-white/5 rounded-3xl w-full">
-                <i class="fas fa-laptop-code text-4xl mb-3 block opacity-20"></i>
-                <p class="text-sm font-semibold">Daftar keahlian belum diisi.</p>
-                <p class="text-xs mt-1 opacity-70">Silakan input kompetensi andalan Anda lewat dashboard admin.</p>
+            <div id="modalActionFooter" class="px-6 py-4 border-t border-slate-200 dark:border-white/5 bg-slate-100/50 dark:bg-white/[0.02] flex justify-end items-center">
+                <a id="modalDemoLink" href="#" target="_blank"
+                    class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs px-6 py-3 rounded-xl shadow-lg shadow-blue-500/20 transition group/modalBtn">
+                    <span>Eksplorasi Live</span>
+                    <i class="fas fa-external-link-alt text-[10px] transform group-hover/modalBtn:scale-110 transition-transform"></i>
+                </a>
             </div>
-            @endif
         </div>
-    </section>
+    </div>
+
+    <div id="lightboxModal" class="fixed inset-0 z-[60] hidden p-4 bg-black/95 backdrop-blur-lg opacity-0 transition-opacity duration-300 items-center justify-center">
+        <div class="relative max-w-5xl w-full transform scale-95 transition-transform duration-300 flex flex-col items-center">
+            <button type="button" onclick="closeLightboxModal()" class="absolute -top-12 right-0 text-white hover:text-gray-400 bg-white/10 w-10 h-10 rounded-full flex items-center justify-center transition cursor-pointer">
+                <i class="fas fa-times"></i>
+            </button>
+            <img id="lightboxImg" src="" class="max-w-full max-h-[80vh] rounded-xl object-contain shadow-2xl">
+        </div>
+    </div>
 
     <footer class="border-t border-slate-200 dark:border-white/5 py-12 bg-slate-100 dark:bg-transparent">
         <div class="max-w-5xl mx-auto px-4 text-center">
@@ -423,258 +361,151 @@
         </div>
     </footer>
 
-    <button id="backToTopBtn" type="button"
-        class="fixed bottom-6 right-6 z-50 p-3.5 rounded-2xl bg-blue-600/90 text-white shadow-xl shadow-blue-500/20 hover:bg-blue-600 hover:scale-110 active:scale-95 transition-all duration-300 opacity-0 translate-y-4 pointer-events-none cursor-pointer backdrop-blur-sm border border-white/10 flex items-center justify-center"
-        title="Kembali ke Atas">
-        <i class="fas fa-chevron-up text-sm animate-bounce"></i>
+    <button id="backToTopBtn" type="button" class="fixed bottom-6 right-6 z-50 p-3.5 rounded-2xl bg-blue-600 text-white shadow-xl opacity-0 translate-y-4 transition-all duration-300">
+        <i class="fas fa-chevron-up"></i>
     </button>
-
-    <div id="portfolioModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-sm opacity-0 transition-opacity duration-300">
-        <div class="bg-slate-50 dark:bg-[#0f0f11] border border-slate-200 dark:border-white/10 rounded-3xl max-w-4xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300">
-            <div class="px-6 py-4 border-b border-slate-200 dark:border-white/5 flex justify-between items-center bg-white/[0.01]">
-                <h3 id="modalProjectName" class="text-lg font-black text-slate-900 dark:text-white tracking-tight">Detail Project</h3>
-                <button type="button" id="closePortfolioModal" class="text-gray-400 hover:text-slate-900 dark:hover:text-white bg-slate-200/50 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 w-8 h-8 rounded-xl flex items-center justify-center transition cursor-pointer">
-                    <i class="fas fa-times text-xs"></i>
-                </button>
-            </div>
-
-            <div class="p-6 overflow-y-auto space-y-6 flex-1 text-sm text-slate-700 dark:text-gray-300 custom-scrollbar">
-                <div class="space-y-1.5">
-                    <h5 class="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Fungsionalitas Sistem</h5>
-                    <p id="modalProjectDesc" class="leading-relaxed text-slate-600 dark:text-gray-400 text-xs sm:text-sm whitespace-pre-line"></p>
-                </div>
-
-                <div id="modalFeaturesWrapper" class="space-y-1.5">
-                    <h5 class="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Fitur Unggulan</h5>
-                    <div id="modalProjectFeatures" class="p-4 bg-slate-100 dark:bg-white/[0.02] border border-slate-200 dark:border-white/5 rounded-xl font-mono text-xs text-blue-600 dark:text-blue-400 whitespace-pre-line leading-relaxed"></div>
-                </div>
-
-                <div id="modalAccountsWrapper" class="space-y-2">
-                    <h5 class="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Akses Akun Uji Coba</h5>
-                    <div class="overflow-x-auto border border-slate-200 dark:border-white/5 rounded-xl bg-white/50 dark:bg-white/[0.01]">
-                        <table class="w-full text-left text-xs min-w-[500px] sm:min-w-full">
-                            <thead class="bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-gray-400 uppercase font-bold text-[9px] tracking-wider border-b border-slate-200 dark:border-white/5">
-                                <tr>
-                                    <th class="px-4 py-3">Hak Akses / Role</th>
-                                    <th class="px-4 py-3">Username / Email</th>
-                                    <th class="px-4 py-3">Password</th>
-                                </tr>
-                            </thead>
-                            <tbody id="modalProjectAccounts" class="divide-y divide-slate-200 dark:divide-white/5 font-mono text-xs text-slate-700 dark:text-gray-300"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div id="modalImagesWrapper" class="space-y-3">
-                    <h5 class="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Galeri Antarmuka Aplikasi</h5>
-                    <div id="modalProjectImages" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
-                </div>
-            </div>
-
-            <div id="modalActionFooter" class="px-6 py-4 border-t border-slate-200 dark:border-white/5 bg-slate-100 dark:bg-white/[0.01] flex justify-end items-center">
-                <a id="modalDemoLink" href="#" target="_blank"
-                    class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs px-6 py-3 rounded-xl shadow-lg shadow-blue-500/20 transition group/modalBtn">
-                    <span>Eksplorasi Aplikasi Sekarang</span>
-                    <i class="fas fa-external-link-alt text-[10px] transform group-hover/modalBtn:scale-110 transition-transform"></i>
-                </a>
-            </div>
-        </div>
-    </div>
 
     <script>
         // Theme Engine
-        if (localStorage.getItem('theme') === 'light') {
-            document.documentElement.classList.remove('dark');
-            document.getElementById('theme-icon').className = 'fas fa-sun';
-        } else {
-            document.documentElement.classList.add('dark');
-            document.getElementById('theme-icon').className = 'fas fa-moon';
-        }
-
-        function toggleTheme() {
-            const html = document.documentElement;
-            const icon = document.getElementById('theme-icon');
-
-            if (html.classList.contains('dark')) {
-                html.classList.remove('dark');
-                icon.className = 'fas fa-sun';
-                localStorage.setItem('theme', 'light');
+        function applyTheme() {
+            if (localStorage.getItem('theme') === 'light') {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('theme-icon').className = 'fas fa-sun';
             } else {
-                html.classList.add('dark');
-                icon.className = 'fas fa-moon';
-                localStorage.setItem('theme', 'dark');
+                document.documentElement.classList.add('dark');
+                document.getElementById('theme-icon').className = 'fas fa-moon';
             }
         }
+        applyTheme();
 
-        // Logic Responsif Utama
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            document.getElementById('theme-icon').className = isDark ? 'fas fa-moon' : 'fas fa-sun';
+        }
+
+        // Lightbox Handler
+        function openLightboxModal(src) {
+            const lb = document.getElementById('lightboxModal');
+            const img = document.getElementById('lightboxImg');
+            img.src = src;
+            document.documentElement.style.overflow = 'hidden';
+            lb.classList.remove('hidden');
+            lb.classList.add('modal-active');
+            setTimeout(() => {
+                lb.classList.remove('opacity-0');
+                lb.querySelector('.transform').classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeLightboxModal() {
+            const lb = document.getElementById('lightboxModal');
+            lb.classList.add('opacity-0');
+            lb.querySelector('.transform').classList.add('scale-95');
+            setTimeout(() => {
+                lb.classList.remove('modal-active');
+                lb.classList.add('hidden');
+                if (document.getElementById('portfolioModal').classList.contains('hidden')) {
+                    document.documentElement.style.overflow = '';
+                }
+            }, 300);
+        }
+
+        // Project Detail Handler
         document.addEventListener('DOMContentLoaded', function() {
             const modal = document.getElementById('portfolioModal');
             const btnClose = document.getElementById('closePortfolioModal');
-            const modalDemoLink = document.getElementById('modalDemoLink');
-            const modalActionFooter = document.getElementById('modalActionFooter');
             const backToTopBtn = document.getElementById('backToTopBtn');
-            const htmlElement = document.documentElement;
-            const bodyElement = document.body;
 
-            // Hamburger Menu Elements
-            const menuBtn = document.getElementById('menu-btn');
-            const mobileMenu = document.getElementById('mobile-menu');
-            const menuIcon = document.getElementById('menu-icon');
-            const mobileLinks = document.querySelectorAll('.mobile-link');
-
-            // Toggle Hamburger Menu Mobile
-            menuBtn.addEventListener('click', function() {
-                const isOpen = !mobileMenu.classList.contains('hidden');
-                if (isOpen) {
-                    mobileMenu.classList.replace('flex', 'hidden');
-                    menuIcon.className = 'fas fa-bars';
-                    htmlElement.classList.remove('overflow-hidden');
-                } else {
-                    mobileMenu.classList.replace('hidden', 'flex');
-                    menuIcon.className = 'fas fa-times';
-                    htmlElement.classList.add('overflow-hidden');
-                }
-            });
-
-            // Tutup Menu Otomatis ketika link navigasi diklik
-            mobileLinks.forEach(link => {
-                link.addEventListener('click', function() {
-                    mobileMenu.classList.replace('flex', 'hidden');
-                    menuIcon.className = 'fas fa-bars';
-                    htmlElement.classList.remove('overflow-hidden');
-                });
-            });
-
-            // Monitor window resize untuk mereset scroll lock jika berpindah layar kian membesar
-            window.addEventListener('resize', function() {
-                if (window.innerWidth >= 768) {
-                    mobileMenu.classList.replace('flex', 'hidden');
-                    menuIcon.className = 'fas fa-bars';
-                    if (modal.classList.contains('hidden')) {
-                        htmlElement.classList.remove('overflow-hidden');
-                    }
-                }
-            });
-
-            // Scroll indicator & Back To Top
-            window.addEventListener('scroll', function() {
-                if (window.scrollY > 300) {
-                    backToTopBtn.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
-                    backToTopBtn.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto');
-                } else {
-                    backToTopBtn.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
-                    backToTopBtn.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
-                }
-            });
-
-            backToTopBtn.addEventListener('click', function() {
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            });
-
-            // Modal Detail Operations
+            // Open Detail
             document.querySelectorAll('.btn-open-detail').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const name = this.getAttribute('data-name');
-                    const desc = this.getAttribute('data-desc');
-                    const features = this.getAttribute('data-features');
-                    const link = this.getAttribute('data-link');
+                btn.addEventListener('click', function(e) {
+                    const data = {
+                        name: this.getAttribute('data-name'),
+                        desc: this.getAttribute('data-desc'),
+                        features: this.getAttribute('data-features'),
+                        link: this.getAttribute('data-link'),
+                        accounts: JSON.parse(this.getAttribute('data-accounts')),
+                        images: JSON.parse(this.getAttribute('data-images'))
+                    };
+
+                    document.getElementById('modalProjectName').innerText = data.name;
+                    document.getElementById('modalProjectDesc').innerText = data.desc;
+                    document.getElementById('modalProjectFeatures').innerText = data.features || '-';
                     
-                    // Ditambahkan fallback string kosong '[]' agar tidak memicu uncaught syntax error jika data bernilai null
-                    const accounts = JSON.parse(this.getAttribute('data-accounts') || '[]');
-                    const images = JSON.parse(this.getAttribute('data-images') || '[]');
-
-                    document.getElementById('modalProjectName').innerText = name;
-                    document.getElementById('modalProjectDesc').innerText = desc || 'Tidak ada deskripsi.';
-
-                    if (link && link.trim() !== "") {
-                        modalActionFooter.classList.remove('hidden');
-                        modalDemoLink.setAttribute('href', link);
-                    } else {
-                        modalActionFooter.classList.add('hidden');
-                    }
-
-                    const featWrapper = document.getElementById('modalFeaturesWrapper');
-                    if (features && features.trim() !== "") {
-                        featWrapper.classList.remove('hidden');
-                        document.getElementById('modalProjectFeatures').innerText = features;
-                    } else {
-                        featWrapper.classList.add('hidden');
-                    }
-
-                    const accWrapper = document.getElementById('modalAccountsWrapper');
-                    const accTbody = document.getElementById('modalProjectAccounts');
-                    accTbody.innerHTML = '';
-                    if (accounts && accounts.length > 0) {
-                        accWrapper.classList.remove('hidden');
-                        accounts.forEach(acc => {
-                            const tr = document.createElement('tr');
-                            tr.className = 'border-b border-slate-200 dark:border-white/5 last:border-0 hover:bg-slate-50 dark:hover:bg-white/[0.02]';
-                            // Penyesuaian nama properti objek agar sinkron dengan template HTML sebelumnya (acc.role & acc.username/email)
-                            tr.innerHTML = `
-                                <td class="px-4 py-3 font-bold text-slate-900 dark:text-white">${acc.role ?? acc.role_akses ?? '-'}</td>
-                                <td class="px-4 py-3 text-blue-600 dark:text-blue-400 select-all">${acc.username ?? acc.email ?? '-'}</td>
-                                <td class="px-4 py-3 text-slate-600 dark:text-gray-300 select-all">${acc.password ?? '-'}</td>
-                            `;
-                            accTbody.appendChild(tr);
+                    const accBody = document.getElementById('modalProjectAccounts');
+                    accBody.innerHTML = '';
+                    if (data.accounts.length) {
+                        document.getElementById('modalAccountsWrapper').classList.remove('hidden');
+                        data.accounts.forEach(acc => {
+                            accBody.innerHTML += `<tr class="border-b dark:border-white/5">
+                                <td class="px-4 py-3 font-bold">${acc.role_akses}</td>
+                                <td class="px-4 py-3 select-all">${acc.username}</td>
+                                <td class="px-4 py-3 select-all">${acc.password}</td>
+                            </tr>`;
                         });
                     } else {
-                        accWrapper.classList.add('hidden');
+                        document.getElementById('modalAccountsWrapper').classList.add('hidden');
                     }
 
-                    const imgWrapper = document.getElementById('modalImagesWrapper');
-                    const imgContainer = document.getElementById('modalProjectImages');
-                    imgContainer.innerHTML = '';
-                    if (images && images.length > 0) {
-                        imgWrapper.classList.remove('hidden');
-                        images.forEach(src => {
-                            const item = document.createElement('div');
-                            item.className = 'relative aspect-video rounded-xl overflow-hidden border border-slate-200 dark:border-white/5 bg-black shadow-inner';
-                            item.innerHTML = `<img src="${src}" class="w-full h-full object-cover hover:scale-105 transition duration-300" onerror="this.src='https://placehold.co/600x400/222/555?text=Preview+Error'">`;
-                            imgContainer.appendChild(item);
-                        });
+                    const imgGrid = document.getElementById('modalProjectImages');
+                    imgGrid.innerHTML = '';
+                    data.images.forEach(src => {
+                        imgGrid.innerHTML += `<div class="aspect-video rounded-xl overflow-hidden bg-black cursor-pointer group relative" onclick="openLightboxModal('${src}')">
+                            <img src="${src}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
+                            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"><i class="fas fa-search-plus text-white"></i></div>
+                        </div>`;
+                    });
+
+                    if (data.link) {
+                        document.getElementById('modalActionFooter').classList.remove('hidden');
+                        document.getElementById('modalDemoLink').href = data.link;
                     } else {
-                        imgWrapper.classList.add('hidden');
+                        document.getElementById('modalActionFooter').classList.add('hidden');
                     }
 
-                    htmlElement.classList.add('overflow-hidden');
-                    bodyElement.classList.add('overflow-hidden');
-
+                    document.documentElement.style.overflow = 'hidden';
                     modal.classList.remove('hidden');
-                    modal.classList.add('flex');
+                    modal.classList.add('modal-active');
                     setTimeout(() => {
                         modal.classList.remove('opacity-0');
                         modal.querySelector('.transform').classList.remove('scale-95');
-                        modal.querySelector('.transform').classList.add('scale-100');
                     }, 10);
                 });
             });
 
             function closeModal() {
                 modal.classList.add('opacity-0');
-                modal.querySelector('.transform').classList.remove('scale-100');
                 modal.querySelector('.transform').classList.add('scale-95');
                 setTimeout(() => {
-                    modal.classList.remove('flex');
+                    modal.classList.remove('modal-active');
                     modal.classList.add('hidden');
-                    if (mobileMenu.classList.contains('hidden')) {
-                        htmlElement.classList.remove('overflow-hidden');
-                    }
-                    bodyElement.classList.remove('overflow-hidden');
+                    document.documentElement.style.overflow = '';
                 }, 300);
             }
 
             btnClose.addEventListener('click', closeModal);
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) closeModal();
+            modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+            // Hamburger Menu
+            const menuBtn = document.getElementById('menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            menuBtn.addEventListener('click', () => {
+                const isHidden = mobileMenu.classList.contains('hidden');
+                mobileMenu.classList.toggle('hidden');
+                mobileMenu.classList.toggle('flex');
+                document.getElementById('menu-icon').className = isHidden ? 'fas fa-times' : 'fas fa-bars';
             });
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal();
+
+            // Scroll Logic
+            window.addEventListener('scroll', () => {
+                const show = window.scrollY > 300;
+                backToTopBtn.classList.toggle('opacity-0', !show);
+                backToTopBtn.classList.toggle('translate-y-4', !show);
             });
+            backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
         });
     </script>
 </body>
-
 </html>
